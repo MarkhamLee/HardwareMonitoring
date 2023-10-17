@@ -1,0 +1,17 @@
+/caseSensors/secrets.py
+/hardwareSensors/__pycache__/*
+/hardwareSensors/test2.py
+/caseSensors/secret.py
+/hardwareSensors/secret.py
+/hardwareSensors/*.json
+/common/*.json
+/common/__pycache__/*
+/common/config.json
+/common/secrets.json 
+/hardwareSensors/scratch.py 
+/hardwareSensors/opi5plus.py 
+/hardwareSensors/hardwareData.log
+/hardwareSensors/config/secrets.json 
+/hardwareSensors/config/windowsConfig.json 
+/hardwareSensors/config/opi5plus.json
+/hardwareSensors/config/OrangePi5_config.json  
