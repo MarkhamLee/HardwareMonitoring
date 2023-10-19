@@ -1,35 +1,35 @@
-# Markham Lee (C) 2023 
-# Hardware Monitor for Linux & Windows: https://github.com/MarkhamLee/hardware-monitor
-# simple script for testing all the NVIDIA SMI queries 
+# Markham Lee (C) 2023
+# Hardware Monitor for Linux & Windows:
+# https://github.com/MarkhamLee/hardware-monitor
+# simple script for testing all the NVIDIA SMI queries
 
-# just uncomment out the version you need. 
+# just uncomment out the version you need.
 
 from linuxDataGPU import LinuxGPUSensors
-#from windowsdata import WindowsSensors
+# from windowsdata import WindowsSensors
 
+# getData = WindowsSensors()
+getData = LinuxGPUSensors()
+print('------------------Single query for all data------------------')
 
-#getData = WindowsSensors() 
-getData = LinuxGPUSensors() 
-
-
-print('-------------------------------Single query for all data-------------------------------')
-
-# test query that retreives all data in one query 
+# test query that retreives all data in one query
 temp, gpuLoad, gpuVram, gpuPower, gpuClock = getData.gpuQuery()
 
-#results
+# results
 print(f'GPU temp is: {temp}')
 print(f'GPU load is: {gpuLoad}')
 print(f'GPU RAM usage is: {gpuVram}')
 print(f'Current GPU Power Consumption: {gpuPower}')
 print(f'The current GPU clock speed (graphics shaders) is: {gpuClock}')
-#print(f'Current FPS is: {fps}') commenting out for now, data isn't what I'd like E.g., FPS for the current game or video
+# commenting out for now, data isn't what I'd like
+# E.g., FPS for the current game or video
+# print(f'Current FPS is: {fps}')
 
 
-print('-------------------------------Individual Queries--------------------------------------')
+print('------------------Individual Queries-------------------------')
 
 
-# test individual queries 
+# test individual queries
 tempIndi = getData.gpuTemp()
 print(f'GPU temp is {tempIndi}')
 
@@ -44,8 +44,7 @@ print(f'Current GPU power consumption is: {powerIndi}')
 
 clockIndi = getData.gpuClock()
 print(f'The current GPU clock speed (graphics shaders) is: {clockIndi}')
-
-# commenting out for now, data isn't what I'd like E.g., FPS for the current game or video
-#fpsIndi = getData.getCPUData()
-#print(f'The current FPS is: {fpsIndi}')
-
+print(f'The current GPU clock speed (graphics shaders) is: {gpuClock}')
+# commenting out for now, data isn't what I'd like
+# E.g., FPS for the current game or video
+# print(f'Current FPS is: {fps}')

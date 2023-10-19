@@ -6,7 +6,6 @@
 # or IoT temperature sensor with a Raspberry Pi or other single
 # board computer
 
-
 import Adafruit_DHT
 import json
 import time

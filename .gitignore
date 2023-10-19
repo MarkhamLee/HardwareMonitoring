@@ -14,4 +14,6 @@
 /hardwareSensors/config/secrets.json 
 /hardwareSensors/config/windowsConfig.json 
 /hardwareSensors/config/opi5plus.json
-/hardwareSensors/config/OrangePi5_config.json  
+/hardwareSensors/config/OrangePi5_config.json
+/hardwareSensors/config/nuc12Config.json
+/hardwareSensors/config/secretsNUC12.json  
