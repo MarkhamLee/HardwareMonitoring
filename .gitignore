@@ -10,3 +10,6 @@
 /windows/config/secrets.json 
 /windows/config/windowsConfig.json 
 /windows/__pycache__/*
+/linux/config/config.json
+/linux/config/secrets.json
+/linux/hardwareData.log
