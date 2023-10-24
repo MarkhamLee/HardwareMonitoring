@@ -28,7 +28,7 @@ Also: I'm fully aware there are numerous off the shelf solutions, but having mor
 * InfluxDB for storing the data
 * Grafana for visualization, my original plan was to use Streamlit, but after seeing how easy it was to configure Grafana, I decided to switch course 
 * I also used node-red for quickly wiring and configuring things like Mosquitto to Influx to Grafana 
-* Grafana, InfluxDB, Mosquitto & Node-Red are all running in containers on a Raspberry Pi (separate from the one gathering temp data). I'm not completely happy with Node-Red so I'll probably use something else when this reaches its final form and is used for my SBC cluster. 
+* Grafana, InfluxDB, Mosquitto & Node-Red are all running in containers on a Raspberry Pi (separate from the one gathering temp data). I was initially skeptical about Node-Red, but after using it for about two months I'm quite happy with it for small scale tasks or receiving data from IoT sensors. 
 
 
 #### Things I want to add/do in the future:
@@ -45,6 +45,9 @@ Also: I'm fully aware there are numerous off the shelf solutions, but having mor
 * Ability to add an "activity flag" to the data, I.e., what the cluster or gaming PC is being used for
 * Use something like a Raspberry Pi Pico or to control case fans (for SBC cluster) depending on temperatures
 * ~~Split the HW data scripts into separate versions for Linux and Windows, may need to do a separate one for Raspberry Pis as well.~~ [COMPLETE]
+
+* **Update 10/24/2013:**
+    * Put the scripts for different platforms in different directories, plus put all the tests in the same directory, also refactored the code for NVIDIA GPUs so the Linux and Windows scripts use the same script for running the NVIDIA SMI queries.
 
 * **Update 10/13/2013:**
     * Added hardware scan script to get the names of that specific device's temperature sensors E.g. "SOC Thermal" for a Rockchip ARM64 device vs "Core Temp" on an Intel Device.
