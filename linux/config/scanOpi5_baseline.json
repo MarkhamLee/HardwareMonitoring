@@ -1,0 +1,11 @@
+[
+    "soc_thermal",
+    "bigcore0_thermal",
+    "iwlwifi_1",
+    "bigcore1_thermal",
+    "littlecore_thermal",
+    "center_thermal",
+    "gpu_thermal",
+    "npu_thermal",
+    "nvme"
+]

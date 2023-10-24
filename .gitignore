@@ -10,6 +10,9 @@
 /windows/config/secrets.json 
 /windows/config/windowsConfig.json 
 /windows/__pycache__/*
+/linux/__pycache__/*
 /linux/config/config.json
 /linux/config/secrets.json
 /linux/hardwareData.log
+/linux/config/opi5plus.json
+/linux/config/OrangePi5_config.json 

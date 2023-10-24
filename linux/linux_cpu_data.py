@@ -99,7 +99,7 @@ class LinuxCpuData():
             current
         bigCore1Temp = psutil.sensors_temperatures()['bigcore1_thermal'][0].\
             current
-        littleCoreTemp = psutil.sensors_temperatures()['littlecore_thermal']
+        littleCoreTemp = psutil.sensors_temperatures()['littlecore_thermal']\
         [0].current
         centerTemp = psutil.sensors_temperatures()['center_thermal'][0].current
         gpuTemp = psutil.sensors_temperatures()['gpu_thermal'][0].current
