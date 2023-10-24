@@ -1,8 +1,8 @@
 # Markham Lee (C) 2023
 # Hardware Monitor for Linux & Windows:
 # https://github.com/MarkhamLee/hardware-monitor
-# script to retrieve CPU related data, invoked by the script that communicates
-# with the MQTT broker.
+# script to retrieve CPU related data, invoked by the script that
+# communicate  with the MQTT broker.
 # building this as a utility script so specific data can be grabbed,
 # rather than having a single fuunction with all the data calls in it
 
@@ -85,11 +85,12 @@ class LinuxCpuData():
     # get current RAM used
     def getRamData(self):
 
-        ramUse = (psutil.virtual_memory()[3])/1073741824
+        ramUse = (psutil.virtual_memory()[3]) / 1073741824
         ramUse = round(ramUse, 2)
 
         return ramUse
 
+    # acquiring temperature sensor data for Rockchip 3588 devices
     @staticmethod
     def sysTemps():
 

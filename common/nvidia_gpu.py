@@ -3,11 +3,13 @@
 # https://github.com/MarkhamLee/hardware-monitor
 # All the GPU data comes from NVIDI SMI Queries, you can read more here:
 # https://nvidia.custhelp.com/app/answers/detail/a_id/3751/~/useful-nvidia-smi-queries
+# this script is platform agnostic, should work exactly the same on Linux and
+# Windows devices running x86 processors
 
 import subprocess as sp
 
 
-class LinuxGPUSensors():
+class NvidiaSensors():
 
     def __init__(self):
 
@@ -36,16 +38,17 @@ class LinuxGPUSensors():
     @staticmethod
     def gpuQuery():
 
-        data = LinuxGPUSensors.smiParser('temperature.gpu,utilization.gpu,\
-                                         memory.used,power.draw,clocks.current.\
-                                         graphics,encoder.stats.averageFps')
+        query = ("temperature.gpu,utilization.gpu,memory.used,power.draw,"
+                 "clocks.current.graphics,encoder.stats.averageFps")
+
+        data = NvidiaSensors.smiParser(query)
 
         # split out each value from the returned list of values
 
         temp = int(data[0])
-        gpuLoad = int(data[1])/100
+        gpuLoad = int(data[1]) / 100
         gpuVram = round(((float(data[2])) / 1024), 2)
-        gpuPower = round((float(data[3]))/100, 2)
+        gpuPower = round((float(data[3])) / 100, 2)
         gpuClock = int(data[4])
 
         # commented this out, as the FPS query shows the average across
@@ -64,7 +67,7 @@ class LinuxGPUSensors():
     def gpuLoad():
 
         query = "utilization.gpu"
-        data = LinuxGPUSensors.smiParser(query)
+        data = NvidiaSensors.smiParser(query)
         data = int(data[0])
 
         return data
@@ -73,7 +76,7 @@ class LinuxGPUSensors():
     def gpuTemp():
 
         query = "temperature.gpu"
-        data = LinuxGPUSensors.smiParser(query)
+        data = NvidiaSensors.smiParser(query)
         data = int(data[0])
 
         return data
@@ -82,8 +85,8 @@ class LinuxGPUSensors():
     def vramUsed():
 
         query = "memory.used"
-        data = LinuxGPUSensors.smiParser(query)
-        data = round((float(data[0])/1024), 2)
+        data = NvidiaSensors.smiParser(query)
+        data = round((float(data[0]) / 1024), 2)
 
         return data
 
@@ -91,8 +94,8 @@ class LinuxGPUSensors():
     def gpuPower():
 
         query = 'power.draw'
-        data = LinuxGPUSensors.smiParser(query)
-        data = round((float(data[0]))/100, 2)
+        data = NvidiaSensors.smiParser(query)
+        data = round((float(data[0])) / 100, 2)
 
         return data
 
@@ -100,7 +103,7 @@ class LinuxGPUSensors():
     def gpuFPS():
 
         query = 'encoder.stats.averageFps'
-        data = LinuxGPUSensors.smiParser(query)
+        data = NvidiaSensors.smiParser(query)
         data = int(data[0])
 
         return data
@@ -109,7 +112,7 @@ class LinuxGPUSensors():
     def gpuClock():
 
         query = 'clocks.current.graphics'
-        data = LinuxGPUSensors.smiParser(query)
+        data = NvidiaSensors.smiParser(query)
         data = int(data[0])
 
         return data

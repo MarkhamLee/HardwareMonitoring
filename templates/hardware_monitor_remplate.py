@@ -13,13 +13,12 @@ import logging
 import sys
 
 
-# this allows us to import modules, classes, scripts et al from the "common" directory 
+# this allows us to import modules from the parent directory
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
 
 from common.deviceTools import DeviceUtilities
-
 
 logging.basicConfig(filename='hardwareData.log', level=logging.DEBUG,
 format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')

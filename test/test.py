@@ -4,8 +4,14 @@
 # quick and dirty script to test all the calls in the
 # linux CPU data script
 
+import sys
+import os
 
-from linuxDataCPU import LinuxCpuData
+# this allows us to import modules from the parent directory
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_dir)
+
+from linux.linux_cpu_data import LinuxCpuData
 
 getData = LinuxCpuData()
 

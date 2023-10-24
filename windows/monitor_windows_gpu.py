@@ -10,7 +10,7 @@ import gc
 import os
 import logging
 import sys
-from windowsdata import WindowsSensors
+from windows_data import WindowsSensors
 
 # this allows us to import modules, classes, scripts et al from the
 # "common" directory, which helps keep the code more modular while also
@@ -20,29 +20,31 @@ parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
 from common.deviceTools import DeviceUtilities
+from common.nvidia_gpu import NvidiaSensors
 
 logging.basicConfig(filename='hardwareDataWindows.log', level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(name)s %(threadName)s\
                         : %(message)s')
 
 
-def monitor(client, data, topic):
+def monitor(client, cpu_data, gpu_data, topic):
 
     logging.debug('HW monitoring started')
 
     while True:
 
-        # get Windows Data
-        bigFreq, littleFreq, cpuTemp = data.getLibreData()
+        # get CPU data clock speed and temperature
+        bigFreq, littleFreq, cpuTemp = cpu_data.getLibreData()
 
-        # get GPU utilization
-        gpuTemp, gpuUtilization, vramUse, gpuPower, gpuClock = data.gpuQuery()
+        # get GPU data
+        gpuTemp, gpuUtilization, vramUse, gpuPower, \
+            gpuClock = gpu_data.gpuQuery()
 
         # get CPU load
-        cpuLoad = data.getCPUData()
+        cpuLoad = cpu_data.getCPUData()
 
         # get RAM use
-        ramUse = data.getRAM()
+        ramUse = cpu_data.getRAM()
 
         payload = {
             "gpuTemp": gpuTemp,
@@ -55,7 +57,7 @@ def monitor(client, data, topic):
             "vramUtilization": vramUse,
             "gpuClock": gpuClock,
             "gpuPower": gpuPower
-            }
+        }
 
         payload = json.dumps(payload)
 
@@ -98,11 +100,14 @@ def main():
                                               port)
 
     # instantiate CPU data class
-    winData = WindowsSensors()
+    win_data = WindowsSensors()
+
+    # instantiate the NVIDIA GPU class
+    gpu_data = NvidiaSensors()
 
     # start monitoring
     try:
-        monitor(client, winData, topic)
+        monitor(client, win_data, gpu_data, topic)
 
     finally:
         client.loop_stop()

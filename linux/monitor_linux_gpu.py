@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Markham Lee (C) 2023
 # Hardware Monitor for Linux & Windows:
 # https://github.com/MarkhamLee/hardware-monitor
@@ -12,15 +11,14 @@ import gc
 import os
 import logging
 import sys
-from linuxDataGPU import LinuxGPUSensors
-from linuxDataCPU import LinuxCpuData
+from linux_cpu_data import LinuxCpuData
 
-# this allows us to import modules, classes, scripts et al from the
-# "common" directory
+# this allows us to import modules from the parent directory
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
 from common.deviceTools import DeviceUtilities
+from common.nvidia_gpu import NvidiaSensors
 
 logging.basicConfig(filename='hardwareDataLinuxGPU.log', level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(name)s %(threadName)s\
@@ -50,16 +48,16 @@ def monitor(client, getData, getGpuData, topic):
 
         # build payload
         payload = {
-                   "cpuTemp": cpuTemp,
-                   "cpuFreq": cpuFreq,
-                   "cpuUse": cpuUtil,
-                   "ramUse": ramUse,
-                   "gpuTemp": temp,
-                   "gpuLoad": gpuLoad,
-                   "gpuVram": gpuVram,
-                   "gpuPower": gpuPower,
-                   "gpuClock": gpuClock
-                    }
+            "cpuTemp": cpuTemp,
+            "cpuFreq": cpuFreq,
+            "cpuUse": cpuUtil,
+            "ramUse": ramUse,
+            "gpuTemp": temp,
+            "gpuLoad": gpuLoad,
+            "gpuVram": gpuVram,
+            "gpuPower": gpuPower,
+            "gpuClock": gpuClock
+        }
 
         payload = json.dumps(payload)
 
@@ -98,7 +96,7 @@ def main():
                                               port)
 
     # instantiate CPU data class & utilities class
-    getGpuData = LinuxGPUSensors()
+    getGpuData = NvidiaSensors()
     getData = LinuxCpuData()
 
     # start monitoring

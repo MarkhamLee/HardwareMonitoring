@@ -3,8 +3,9 @@
 # the script gathers data from two DHT22 temperature sensors and then
 # publishes that data to a MQTT topic. Also, can strip out all the MQTT
 # stuff and just use the DHT22 code for building a weather station
-# or IoT temperature sensor with a Raspberry Pi or other single
-# board computer
+# or IoT temperature sensor with a Raspberry Pi
+# note: the Adafruit library is specific to a Raspberry Pi, using another
+# type of SBC may or may not work
 
 import Adafruit_DHT
 import json
@@ -14,7 +15,7 @@ import os
 import sys
 import logging
 
-# this allows us to import modules, classes, scripts et al from the "common"
+# this allows us to import modules from folders in the parent directory
 # directory
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
@@ -54,11 +55,11 @@ def getTemps(client, topic, interval=30):
         heating_factor = round((temp_exhaust - temp_intake), 3)
 
         payload = {
-              "ct": temp_interior,
-              "et": temp_exhaust,
-              "it": temp_intake,
-              "hf": heating_factor
-                 }
+            "ct": temp_interior,
+            "et": temp_exhaust,
+            "it": temp_intake,
+            "hf": heating_factor
+        }
 
         payload = json.dumps(payload)
         result = client.publish(topic, payload)

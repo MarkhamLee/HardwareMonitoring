@@ -14,7 +14,7 @@ import gc
 import os
 import logging
 import sys
-from linuxDataCPU import LinuxCpuData
+from linux_cpu_data import LinuxCpuData
 
 # this allows us to import modules, classes, scripts et al from the
 # "common" directory
@@ -63,7 +63,7 @@ def monitor(client, getData, topic):
             "bigCore1Freq": bigCore1Freq,
             "cpuUse": cpuUtil,
             "ramUse": ramUse
-            }
+        }
 
         payload = json.dumps(payload)
 

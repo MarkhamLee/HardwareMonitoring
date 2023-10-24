@@ -10,14 +10,11 @@ import time
 import gc
 import logging
 import sys
-from linuxDataCPU import LinuxCpuData
+from linux_cpu_data import LinuxCpuData
 
-# this allows us to import modules, classes, scripts et al from the
-# "common" directory. This will get flagged by most linters, but it's
-# unavoidable as you can't run this code before you import the os library
+# this allows us to import modules from the parent directory
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
-print(sys.path)
 
 from common.deviceTools import DeviceUtilities
 
@@ -46,11 +43,11 @@ def monitor(client, getData, topic):
         cpuTemp = getData.coreTemp()
 
         payload = {
-                   "cpuTemp": cpuTemp,
-                   "cpuFreq": cpuFreq,
-                   "cpuUse": cpuUtil,
-                   "ramUse": ramUse
-                }
+            "cpuTemp": cpuTemp,
+            "cpuFreq": cpuFreq,
+            "cpuUse": cpuUtil,
+            "ramUse": ramUse
+        }
 
         payload = json.dumps(payload)
 

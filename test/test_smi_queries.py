@@ -2,14 +2,21 @@
 # Hardware Monitor for Linux & Windows:
 # https://github.com/MarkhamLee/hardware-monitor
 # simple script for testing all the NVIDIA SMI queries
+# the SMI query script is platform agnostic, so this test
+# works on both Linux and Windows devices running x86 processors
 
-# just uncomment out the version you need.
+import os
+import sys
 
-from linuxDataGPU import LinuxGPUSensors
-# from windowsdata import WindowsSensors
+# this allows us to import modules from the parent directory
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_dir)
 
-# getData = WindowsSensors()
-getData = LinuxGPUSensors()
+from common.nvidia_gpu import NvidiaSensors
+
+getData = NvidiaSensors()
+
+
 print('------------------Single query for all data------------------')
 
 # test query that retreives all data in one query
@@ -44,7 +51,6 @@ print(f'Current GPU power consumption is: {powerIndi}')
 
 clockIndi = getData.gpuClock()
 print(f'The current GPU clock speed (graphics shaders) is: {clockIndi}')
-print(f'The current GPU clock speed (graphics shaders) is: {gpuClock}')
 # commenting out for now, data isn't what I'd like
 # E.g., FPS for the current game or video
 # print(f'Current FPS is: {fps}')
