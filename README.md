@@ -8,7 +8,7 @@ Also: I'm fully aware there are numerous off the shelf solutions, but having mor
 
 
 **Heavily, heavily modded Skyrim, 4k textures, vastly improved graphics and character models, parallax mods, updated animations, updated combat, engine upgrades to enable FPS above 60 FPS without breaking the engine/causing weird visual artifacts, etc., running in 4k @ 180+ FPS --- *it's basically Eldenrim at this point...*** 
-![Dashboard Screenshot](/images/skyrim2.png)  
+![Dashboard Screenshot](/images/skyrim3.png)  
 
 #### How to run it
 * At the moment this only works for NVIDIA GPUs and has only been tested on Intel CPUs, plan to test on ARM and AMD soon 
