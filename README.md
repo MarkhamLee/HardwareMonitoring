@@ -11,11 +11,13 @@ Also: I'm fully aware there are numerous off the shelf solutions, but having mor
 ![Dashboard Screenshot](/images/skyrim3.png)  
 
 #### How to run it
-* At the moment this only works for NVIDIA GPUs and has only been tested on Intel CPUs, plan to test on ARM and AMD soon 
 * The scripts for Linux, Linux w/ NVIDIA GPU and Windows all use the same pattern command wise: 
     * scriptname.py broker-config-file.json secrets-config-file.json
+    * This pattern is for easy setup and testing, the suggested method would be store the config and secrets data in environmental variable. 
 * For the case temps script it's exactly as above, but you also need to pass an integer for the refresh interval. 
     * Note: while GPU and CPUs can have very quick frequency, temperature and load changes, air temperature changes aren't as rapid so it doesn't need to refresh every second like the hardware sensors. 
+* At the moment detailed GPU monitoring (VRAM, Clock Freq, Power Draw) only works for NVIDIA GPUs, however, the solution can monitor temperatures for Rockchip 3588 GPUs and NPUs.
+* Has been tested with Intel X86 CPUs and Rockchip 3588 CPUs/System on a Chip (SOCs), while it hasn't been tested on AMD CPUs or Raspberry Pi SOCs (tests pending), you can use the hardware_scan.py in the Linux folder to get the data on the available temperature sensors on those platforms. An update to hardware scan to gather details on all available sensors is pending. 
 
 
 #### What we have so far: 
