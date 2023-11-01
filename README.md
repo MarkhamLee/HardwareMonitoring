@@ -25,6 +25,7 @@ Also: I'm fully aware there are numerous off the shelf solutions, but having mor
 * All GPU data acquired directly from the GPU via NVIDIA SMI queries 
 * Scripts for Windows machines with NVIDIA GPUs, plus separate scripts for Linux machines without NVIDIA GPUs/Dedicated GPUs  
 * Scripts for Rockchip 3588 Running Ubuntu
+* Scripts for Raspberry Pi 4Bs running the official headless Ubuntu distro for Raspberry Pi
 * Three DHT22 temperature sensors connected to a Raspberry Pi gather intake air, internal case and exhaust  temperatures 
 * Mosquitto for receiving MQTT messages
 * InfluxDB for storing the data
@@ -37,7 +38,7 @@ Also: I'm fully aware there are numerous off the shelf solutions, but having mor
 * Scan and collect data on the hardware and then adjust data collection accordingly 
 * Test the cpu only Linux script on the following devices and make any necessary tweaks for ARM devices: 
     * Raspberry Pi running headless Raspian 
-    * Raspberry Pi running headless Ubuntu for RPI 
+    * ~~Raspberry Pi running headless Ubuntu for RPI~~ [COMPLETE] 
     * ~~Orange Pi 5+ running [Joshua Riek's Ubuntu distribution for Rockchip 3588 devices]** (https://github.com/Joshua-Riek/ubuntu-rockchip)~~[COMPLETE] 
     * Orange Pi 3B running Armbian 
 * Add FPS data to the W11 script(s) 
