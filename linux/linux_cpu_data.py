@@ -109,6 +109,7 @@ class LinuxCpuData():
         return socTemp, bigCore0Temp, bigCore1Temp, littleCoreTemp, \
             centerTemp, gpuTemp, npuTemp, nvmeTemp
 
+    # CPU frequencies for the various cores of a Rockchip 3588 device
     @staticmethod
     def getRockChip3588Freqs():
 
@@ -118,3 +119,11 @@ class LinuxCpuData():
         bigCore1 = freq[2].current
 
         return littleCore, bigCore0, bigCore1
+
+    # get CPU temp for Raspberry Pi 4B
+    @staticmethod
+    def get_rpi_4b_temps():
+
+        rpi_cpu_temp = psutil.sensors_temperatures()['cpu_thermal'][0].current
+
+        return rpi_cpu_temp
