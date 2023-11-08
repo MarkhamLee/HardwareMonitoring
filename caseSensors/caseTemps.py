@@ -54,6 +54,10 @@ def getTemps(client: object, topic: object, interval: int):
         # of the case
         heating_factor = round((temp_exhaust - temp_intake), 3)
 
+        # I deployed this as a service on my RPI and this quick check
+        # is so that only sends data under high activity. I.e. under
+        # normal use this number is around 4-5, it only gets above
+        # that if I'm playing games or training ML models
         if heating_factor > 8:
 
             payload = {
