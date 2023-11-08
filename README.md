@@ -11,11 +11,11 @@ Also: I'm fully aware there are numerous off the shelf solutions, but having mor
 ![Dashboard Screenshot](/images/skyrim3.png)  
 
 #### How to run it
-* The scripts for Linux, Linux w/ NVIDIA GPU and Windows all use the same pattern command wise: 
-    * scriptname.py broker-config-file.json secrets-config-file.json
-    * This pattern is for easy setup and testing, the suggested method would be store the config and secrets data in environmental variable. 
-* For the case temps script it's exactly as above, but you also need to pass an integer for the refresh interval. 
-    * Note: while GPU and CPUs can have very quick frequency, temperature and load changes, air temperature changes aren't as rapid so it doesn't need to refresh every second like the hardware sensors. 
+* The windows script CLI pattern is file-name [path to general config json] [path to secrets json], you can use this pattern + the main method as a reference for using json configs with the Linux files. I didn't convert the one Windows script just there is an example of using this with json configs 
+* The scripts for Linux, Linux w/ NVIDIA GPU and the single board computers Raspberry Pi & Orange Pi all use the same pattern cli wise: 
+    * scriptname.py 'mqtt topic name'
+* For the case temps script it's exactly as above, but you have to pass the topic name and a refresh interval 
+    * Note: while GPU and CPUs can have very quick frequency, temperature and load changes, case air temperature changes aren't as rapid so it doesn't need to refresh every second like the hardware sensors. 
 * At the moment detailed GPU monitoring (VRAM, Clock Freq, Power Draw) only works for NVIDIA GPUs, however, the solution can monitor temperatures for Rockchip 3588 GPUs and NPUs.
 * Has been tested with Intel X86 CPUs, Raspberry Pi 4bs and Rockchip 3588 CPUs/System on a Chip (SOCs), AMD tests are pending. For other platforms you can use the hardware_scan.py in the Linux folder to get the data on the available temperature sensors on those devices. An update to hardware scan to gather details on all available sensors is pending. 
 

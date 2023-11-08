@@ -1,9 +1,8 @@
 # Markham Lee (C) 2023
 # Hardware Monitor for Linux & Windows:
-# https://github.com/MarkhamLee/hardware-monitor
-# this would be for linux devices where I'm not using an NVIDIA GPU/a GPU
-# at all, e.g.single board computers running headless, or devices like an
-# Intel NUC so I would only monitor the CPU
+# https://github.com/MarkhamLee/HardwareMonitoring
+# For Linux devices with an NVIDIA GPU
+# CLI instructions <filename> <MQTT topic name as a string>
 
 import json
 import time
@@ -17,15 +16,15 @@ from linux_cpu_data import LinuxCpuData
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
-from common.deviceTools import DeviceUtilities
-from common.nvidia_gpu import NvidiaSensors
+from common.deviceTools import DeviceUtilities  # noqa: E402
+from common.nvidia_gpu import NvidiaSensors  # noqa: E402
 
 logging.basicConfig(filename='hardwareDataLinuxGPU.log', level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(name)s %(threadName)s\
                         : %(message)s')
 
 
-def monitor(client, getData, getGpuData, topic):
+def monitor(client: object, getData: object, getGpuData: object, topic: str):
 
     while True:
 
@@ -81,27 +80,29 @@ def main():
     # parse command line arguments
     args = sys.argv[1:]
 
-    configFile = args[0]
-    secrets = args[1]
+    TOPIC = args[0]
 
-    # load config file(s)
-    broker, port, topic, user, pwd = deviceUtilities.loadConfigs(configFile,
-                                                                 secrets)
+    # load environmental variables
+    MQTT_BROKER = os.environ["MQTT_BROKER"]
+    MQTT_USER = os.environ['MQTT_USER']
+    MQTT_SECRET = os.environ['MQTT_SECRET']
+    MQTT_PORT = int(os.environ['MQTT_PORT'])
 
     # get unique client ID
     clientID = deviceUtilities.getClientID()
 
     # get mqtt client
-    client, code = deviceUtilities.mqttClient(clientID, user, pwd, broker,
-                                              port)
+    client, code = deviceUtilities.mqttClient(clientID, MQTT_USER,
+                                              MQTT_SECRET, MQTT_BROKER,
+                                              MQTT_PORT)
 
-    # instantiate CPU data class & utilities class
+    # instantiate CPU & GPU data classes
     getGpuData = NvidiaSensors()
     getData = LinuxCpuData()
 
     # start monitoring
     try:
-        monitor(client, getData, getGpuData, topic)
+        monitor(client, getData, getGpuData, TOPIC)
 
     finally:
         client.loop_stop()

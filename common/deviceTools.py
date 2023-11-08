@@ -1,7 +1,7 @@
 # !/usr/bin/env python
 # Markham Lee (C) 2023
 # Hardware Monitor for Linux & Windows:
-# https://github.com/MarkhamLee/hardware-monitor
+# https://github.com/MarkhamLee/HardwareMonitoring
 # simple script to generate unique IDs for each device, uses UUID4
 # as that ensures we get a truly unique ID and not one derived from
 # the MAC address, with the associated security risks such an
@@ -69,7 +69,8 @@ class DeviceUtilities():
         return sensorList
 
     @staticmethod
-    def mqttClient(clientID, username, pwd, host, port):
+    def mqttClient(clientID: str, username: str, pwd: str,
+                   host: str, port: int):
 
         def connectionStatus(client, userdata, flags, code):
 

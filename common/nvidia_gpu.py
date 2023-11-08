@@ -1,10 +1,11 @@
 # Markham Lee 2023
 # Retrieving temp, load, etc., data from NVIDIA GPUs
-# https://github.com/MarkhamLee/hardware-monitor
+# # https://github.com/MarkhamLee/HardwareMonitoring
 # All the GPU data comes from NVIDI SMI Queries, you can read more here:
 # https://nvidia.custhelp.com/app/answers/detail/a_id/3751/~/useful-nvidia-smi-queries
 # this script is platform agnostic, should work exactly the same on Linux and
 # Windows devices running x86 processors
+
 
 import subprocess as sp
 
@@ -21,7 +22,7 @@ class NvidiaSensors():
     # set up.
 
     @staticmethod
-    def smiParser(query):
+    def smiParser(query: str):
 
         cmd = "nvidia-smi --query-gpu=" + query + " --format=csv,noheader"
         data = sp.check_output(cmd, shell=True)

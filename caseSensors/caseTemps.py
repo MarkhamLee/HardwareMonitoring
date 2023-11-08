@@ -1,11 +1,11 @@
 # Markham Lee 2023
-# Hardware Monitor: https://github.com/MarkhamLee/hardware-monitor
+# Hardware Monitor: https://github.com/MarkhamLee/HardwareMonitoring
 # the script gathers data from two DHT22 temperature sensors and then
 # publishes that data to a MQTT topic. Also, can strip out all the MQTT
 # stuff and just use the DHT22 code for building a weather station
-# or IoT temperature sensor with a Raspberry Pi
-# note: the Adafruit library is specific to a Raspberry Pi, using another
-# type of SBC may or may not work
+# or IoT temperature sensor with a Raspberry Pi note: the Adafruit
+# library is specific to a Raspberry Pi, using another type
+# of SBC may or may not work
 
 import Adafruit_DHT
 import json
@@ -20,7 +20,7 @@ import logging
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
-from common.deviceTools import DeviceUtilities
+from common.deviceTools import DeviceUtilities  # noqa: E402
 
 # setup logging for static methods
 logging.basicConfig(filename='hardwareData.log', level=logging.DEBUG,
@@ -28,14 +28,14 @@ logging.basicConfig(filename='hardwareData.log', level=logging.DEBUG,
                         : %(message)s')
 
 
-def getTemps(client, topic, interval=30):
+def getTemps(client: object, topic: object, interval: int):
 
     while True:
 
         # get temperature and humidity data, not using humidity at the moment,
         # but may use in the future TODO: add exception handling, i.e. log
         # when one of the individual sensors is offline or malfunctioning
-        # these sensors are kind of "slow" takes a few secodns to gather data
+        # these sensors are kind of "slow" takes a few seconds to gather data
         # from each one
         hum_interior, temp_interior = Adafruit_DHT.read_retry(Adafruit_DHT.
                                                               DHT22, 4)
@@ -54,33 +54,41 @@ def getTemps(client, topic, interval=30):
         # of the case
         heating_factor = round((temp_exhaust - temp_intake), 3)
 
-        payload = {
-            "ct": temp_interior,
-            "et": temp_exhaust,
-            "it": temp_intake,
-            "hf": heating_factor
-        }
+        if heating_factor > 8:
 
-        payload = json.dumps(payload)
-        result = client.publish(topic, payload)
-        status = result[0]
+            payload = {
+                  "ct": temp_interior,
+                  "et": temp_exhaust,
+                  "it": temp_intake,
+                  "hf": heating_factor
+            }
 
-        if status == 0:
-            print(f'Data {payload} was published to: {topic}')
+            payload = json.dumps(payload)
+            result = client.publish(topic, payload)
+            status = result[0]
+
+            if status == 0:
+
+                print(f'Data {payload} was published to: {topic}')
+
+            else:
+
+                print(f'Failed to send {payload} to: {topic}')
+                logging.debug(f'data failed to publish to MQTT topic,\
+                              status code: {status}')
+
+                # given that this is a RAM constrained device,
+                # let's delete everything and do some garbage collection,
+                # watching things on htop the RAM usage was creeping upwards...
+
+                del payload, hum_exhaust, hum_interior, hum_intake,
+                temp_interior, temp_exhaust, status, result
+                gc.collect()
+
+            time.sleep(interval)
 
         else:
-            print(f'Failed to send {payload} to: {topic}')
-            logging.debug(f'data failed to publish to MQTT topic, status code:\
-                          {status}')
-
-        # given that this is a RAM constrained device, let's delete
-        # everything and do some garbage collection, watching things
-        # on htop the RAM usage was creeping upwards...
-        del payload, hum_exhaust, hum_interior, hum_intake, temp_interior,
-        temp_exhaust, status, result
-        gc.collect()
-
-        time.sleep(interval)
+            time.sleep(600)
 
 
 def main():
@@ -91,23 +99,26 @@ def main():
     # parse command line arguments
     args = sys.argv[1:]
 
-    configFile = args[0]
-    secrets = args[1]
-    interval = int(args[2])
+    TOPIC = args[0]
+    INTERVAL = int(args[1])
 
-    broker, port, topic, user, pwd = deviceUtilities.loadConfigs(configFile,
-                                                                 secrets)
+    # load environmental variables
+    MQTT_BROKER = os.environ['MQTT_BROKER']
+    MQTT_USER = os.environ['MQTT_USER']
+    MQTT_SECRET = os.environ['MQTT_SECRET']
+    MQTT_PORT = int(os.environ['MQTT_PORT'])
 
     # get unique client ID
     clientID = deviceUtilities.getClientID()
 
     # get mqtt client
-    client, code = deviceUtilities.mqttClient(clientID, user, pwd, broker,
-                                              port)
+    client, code = deviceUtilities.mqttClient(clientID, MQTT_USER,
+                                              MQTT_SECRET, MQTT_BROKER,
+                                              MQTT_PORT)
 
     # start data monitoring
     try:
-        getTemps(client, topic, interval)
+        getTemps(client, TOPIC, INTERVAL)
 
     finally:
         client.loop_stop()
