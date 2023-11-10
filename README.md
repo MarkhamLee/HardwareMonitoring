@@ -40,7 +40,7 @@ Also: I'm fully aware there are numerous off the shelf solutions, but having mor
     * Raspberry Pi running headless Raspian 
     * ~~Raspberry Pi running headless Ubuntu for RPI~~ [COMPLETE] 
     * ~~Orange Pi 5+ running [Joshua Riek's Ubuntu distribution for Rockchip 3588 devices]** (https://github.com/Joshua-Riek/ubuntu-rockchip)~~[COMPLETE] 
-    * Orange Pi 3B running Armbian 
+    * ~~Orange Pi 3B running Armbian~~[COMPLETE] 
 * Add FPS data to the W11 script(s) 
 * CPU load per core 
 * Fan speeds: desktop cases, desktop GPUs, individual fans on SBCs, fans in cluster cases 

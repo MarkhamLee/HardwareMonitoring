@@ -21,7 +21,7 @@ sensorList = list(tempDict.keys())
 print(sensorList)
 
 # save the keys as a json file
-with open('config/scanOpi5_baseline.json', 'w') as f:
+with open('config/scanOpi3b_baseline.json', 'w') as f:
     json.dump(sensorList, f, indent=4)
 
 print(psutil.cpu_freq(percpu=True))
