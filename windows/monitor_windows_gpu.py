@@ -19,15 +19,15 @@ from windows_data import WindowsSensors
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
-from common.deviceTools import DeviceUtilities
-from common.nvidia_gpu import NvidiaSensors
+from common.deviceTools import DeviceUtilities  # noqa: E402
+from common.nvidia_gpu import NvidiaSensors  # noqa: E402
 
 logging.basicConfig(filename='hardwareDataWindows.log', level=logging.DEBUG,
                     format='%(asctime)s %(levelname)s %(name)s %(threadName)s\
                         : %(message)s')
 
 
-def monitor(client, cpu_data, gpu_data, topic):
+def monitor(client: object, cpu_data: object, gpu_data: object, topic: str):
 
     logging.debug('HW monitoring started')
 
