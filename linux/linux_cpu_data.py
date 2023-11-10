@@ -128,14 +128,8 @@ class LinuxCpuData():
 
         return rpi_cpu_temp
 
-    @staticmethod 
+    @staticmethod
     def rockchip_3566_temps():
-        
-        return psutil.sensors_temperatures()['cpu_thermal'][0].current,\
+
+        return psutil.sensors_temperatures()['cpu_thermal'][0].current, \
             psutil.sensors_temperatures()['gpu_thermal'][0].current
-
-    
-
-
-    
-

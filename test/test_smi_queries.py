@@ -12,7 +12,7 @@ import sys
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
-from common.nvidia_gpu import NvidiaSensors
+from common.nvidia_gpu import NvidiaSensors  # noqa: E402
 
 getData = NvidiaSensors()
 
