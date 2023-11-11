@@ -133,3 +133,9 @@ class LinuxCpuData():
 
         return psutil.sensors_temperatures()['cpu_thermal'][0].current, \
             psutil.sensors_temperatures()['gpu_thermal'][0].current
+            
+    @staticmethod
+    def libre_lepotato_temps():
+        
+        return psutil.sensors_temperatures()['scpi_sensors'][0].current
+        
