@@ -59,8 +59,7 @@ def monitor(client: object, getData: object, topic: str):
         status = result[0]
 
         if status == 0:
-            print(f'Data {payload} was published to: {topic}')
-        else:
+
             print(f'Failed to send {payload} to: {topic}')
             logging.debug(f'MQTT publishing failure, return code: {status}')
 
