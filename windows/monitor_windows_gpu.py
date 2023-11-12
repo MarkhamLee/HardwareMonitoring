@@ -1,6 +1,6 @@
 # Markham Lee (C) 2023
 # Hardware Monitor for Linux & Windows:
-# https://github.com/MarkhamLee/hardware-monitor
+# https://github.com/MarkhamLee/HardwareMonitoring
 # script to retrieve Windows data and publish it to an MQTT topic
 # leverages psutil + the LibreHardwareMonitor library
 

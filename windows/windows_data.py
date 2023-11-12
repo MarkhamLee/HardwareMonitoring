@@ -1,6 +1,6 @@
 # Markham Lee 2023
 # Hardware Monitor for Windows & Linux
-# https://github.com/MarkhamLee/hardware-monitor
+# # https://github.com/MarkhamLee/HardwareMonitoring
 # This program makes use of the LibreHardWareMonitor repo:
 # https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/tree/master
 # in particular two .dll hidsharp and LibreHardwareMonitorLib in order to

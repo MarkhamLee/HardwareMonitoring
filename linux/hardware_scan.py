@@ -1,5 +1,5 @@
 # Markham Lee (C) 2023
-# https://github.com/MarkhamLee/Hardware-Monitoring
+# # https://github.com/MarkhamLee/HardwareMonitoring
 # Built this primarily for ARM64 CPUs and System on Chip (SOC)
 # machines like Orange Pi 5/5+ and Raspberry Pi 4B, in addition to AMD
 # machines. However, but it will work for Intel machines as well. The

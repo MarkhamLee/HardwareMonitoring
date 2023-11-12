@@ -1,6 +1,6 @@
 # Markham Lee (C) 2023
 # Hardware Monitor for Linux & Windows:
-# https://github.com/MarkhamLee/hardware-monitor
+# # https://github.com/MarkhamLee/HardwareMonitoring
 # script to retrieve CPU related data, invoked by the script that
 # communicate  with the MQTT broker.
 # building this as a utility script so specific data can be grabbed,
