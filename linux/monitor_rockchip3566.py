@@ -43,7 +43,7 @@ def monitor(client: object, getData: object, topic: str):
         ram_use = getData.getRamData()
 
         # get per CPU frequencies (bigCore0, bigCore1, littleCore)
-        cpu_freq = getData.getFreq()
+        cpu_freq, core_count = getData.getFreq()
 
         # get system temperatures
         cpu_temp, gpu_temp = getData.rockchip_3566_temps()
@@ -66,7 +66,7 @@ def monitor(client: object, getData: object, topic: str):
             logging.debug(f'MQTT publishing failure, return code: {status}')
 
         del payload, cpu_util, ram_use, cpu_freq, cpu_temp,
-        gpu_temp, status, result
+        gpu_temp, status, result, core_count
         gc.collect()
 
 
