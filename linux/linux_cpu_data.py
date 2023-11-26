@@ -16,109 +16,111 @@ class LinuxCpuData():
 
         # get the # of cores, as we can use that to iterate through and
         # get things like current speed for all CPU cores
-        self.coreCount = psutil.cpu_count(logical=False)
+        self.core_count = psutil.cpu_count(logical=False)
 
     # for instances where we want to get data per core, we can pass the
     # function that retrieves that data to this one and then build the
     # "per core" payload
     def buildPayload(self, inputFunction, index=0):
 
-        tempDict = {}
+        temp_dict = {}
 
-        while self.coreCount > index:
+        while self.core_count > index:
 
             data = inputFunction[index].current
             data = round(data, 1)
             key = (f'core {index}')
-            tempDict[key] = data
+            temp_dict[key] = data
             index += 1
 
-        payload = json.dumps(tempDict)
+        payload = json.dumps(temp_dict)
 
         return payload
 
     # getting temps per core
     def getTemps(self, index=0):
 
-        if self.coreCount > 1:
+        if self.core_count > 1:
 
-            tempPayload = self.buildPayload(psutil.sensors_temperatures()
-                                            ['coretemp'], index=0)
+            temp_payload = self.buildPayload(psutil.sensors_temperatures()
+                                             ['coretemp'], index=0)
 
         else:
-            coreTemp = psutil.sensors_temperatures()['coretemp'][index].current
-            tempPayload = {'core 0': coreTemp}
-            tempPayload = json.dumps(tempPayload)
+            core_temp = \
+                psutil.sensors_temperatures()['coretemp'][index].current
+            temp_payload = {'core 0': core_temp}
+            temp_payload = json.dumps(temp_payload)
 
-        return tempPayload
+        return temp_payload
 
     # returns CPU package temp
     def coreTemp(self):
 
-        coreTemp = psutil.sensors_temperatures()['coretemp'][0].current
+        core_temp = psutil.sensors_temperatures()['coretemp'][0].current
 
-        return coreTemp
+        return core_temp
 
     # get average clock speed for all cores
     def getFreq(self, all_cpu=False):
 
-        allFreq = psutil.cpu_freq(percpu=all_cpu)[0]
-        allFreq = round(allFreq, 1)
+        all_freq = psutil.cpu_freq(percpu=all_cpu)[0]
+        all_freq = round(all_freq, 1)
 
-        return allFreq, self.coreCount
+        return all_freq, self.core_count
 
     # get frequency per core
     def freqPerCore(self, all_cpu=True):
 
-        perCoreFreq = self.buildPayload(psutil.cpu_freq(percpu=all_cpu))
+        per_core_freq = self.buildPayload(psutil.cpu_freq(percpu=all_cpu))
 
-        return perCoreFreq
+        return per_core_freq
 
     # CPU load
     def getCPUData(self):
 
-        cpuUtil = (psutil.cpu_percent(interval=1))
-        cpuUtil = round(cpuUtil, 1)
+        cpu_util = (psutil.cpu_percent(interval=1))
+        cpu_util = round(cpu_util, 1)
 
-        return cpuUtil
+        return cpu_util
 
     # get current RAM used
     def getRamData(self):
 
-        ramUse = (psutil.virtual_memory()[3]) / 1073741824
-        ramUse = round(ramUse, 2)
+        ram_use = (psutil.virtual_memory()[3]) / 1073741824
+        ram_use = round(ram_use, 2)
 
-        return ramUse
+        return ram_use
 
     # acquiring temperature sensor data for Rockchip 3588 devices
     @staticmethod
     def sysTemps():
 
-        socTemp = psutil.sensors_temperatures()['soc_thermal'][0].current
-        bigCore0Temp = psutil.sensors_temperatures()['bigcore0_thermal'][0].\
+        soc_temp = psutil.sensors_temperatures()['soc_thermal'][0].current
+        big_core_0temp = psutil.sensors_temperatures()['bigcore0_thermal'][0].\
             current
-        bigCore1Temp = psutil.sensors_temperatures()['bigcore1_thermal'][0].\
+        big_core_1temp = psutil.sensors_temperatures()['bigcore1_thermal'][0].\
             current
-        littleCoreTemp = psutil.\
+        little_core_temp = psutil.\
             sensors_temperatures()['littlecore_thermal'][0].current
-        centerTemp = psutil.sensors_temperatures()['center_thermal'][0].current
-        gpuTemp = psutil.sensors_temperatures()['gpu_thermal'][0].current
-        npuTemp = psutil.sensors_temperatures()['npu_thermal'][0].current
-        nvmeTemp = psutil.sensors_temperatures()['nvme'][0].current
+        center_temp = \
+            psutil.sensors_temperatures()['center_thermal'][0].current
+        gpu_temp = psutil.sensors_temperatures()['gpu_thermal'][0].current
+        npu_temp = psutil.sensors_temperatures()['npu_thermal'][0].current
+        nvme_temp = psutil.sensors_temperatures()['nvme'][0].current
 
-        return socTemp, bigCore0Temp, bigCore1Temp, littleCoreTemp, \
-            centerTemp, gpuTemp, npuTemp, nvmeTemp
+        return soc_temp, big_core_0temp, big_core_1temp, little_core_temp, \
+            center_temp, gpu_temp, npu_temp, nvme_temp
 
     # CPU frequencies for the various cores of a Rockchip 3588 device
     @staticmethod
     def getRockChip3588Freqs():
 
         freq = psutil.cpu_freq(percpu=True)
-        littleCore = freq[0].current
-        bigCore0 = freq[1].current
-        bigCore1 = freq[2].current
+        little_core = freq[0].current
+        big_core0 = freq[1].current
+        big_core1 = freq[2].current
 
-        return littleCore, bigCore0, bigCore1
+        return little_core, big_core0, big_core1
 
     # get CPU temp for Raspberry Pi 4B
     @staticmethod
@@ -138,3 +140,12 @@ class LinuxCpuData():
     def libre_lepotato_temps():
 
         return psutil.sensors_temperatures()['scpi_sensors'][0].current
+
+    @staticmethod
+    def amd_linux_data():
+
+        nvme_temp = psutil.sensors_temperatures()['nvme'][0].current
+        cpu_temp = psutil.sensors_temperatures()['k10temp'][0].current
+        amdgpu_temp = psutil.sensors_temperatures()['amdgpu'][0].current
+
+        return nvme_temp, cpu_temp, amdgpu_temp

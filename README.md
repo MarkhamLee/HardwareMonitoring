@@ -4,7 +4,7 @@ What started out as me toying around with some ideas for a solution to monitor c
 
 TL/DR: *"you like computers bro? Okay, but did you put a small computer inside your big computer to send data about the big computer and the case it's in to another computer?"* 
 
-Also: I'm fully aware there are numerous off the shelf solutions, but having more granular control helps in situations where variances in MOBOs, coolers and the like result in the wrong data being picked up (*E.g., fans and water coolers via AIDA64 on my setup*), plus it's easier to incorporate data from external sources. 
+Also: I'm fully aware there are numerous off the shelf solutions, but having more granular control helps in situations where variances in MOBOs, coolers and the like result in the wrong data being picked up (*E.g., fans and water coolers via AIDA64 on my setup*), plus it's easier to incorporate data from external sources. At this juncture this project could be viewed as an *"aggregating data for a PC Sensor Panel solution, baseline scripts for being monitoring linux hardware for use in other projects"*  E.g., [my data platform project](https://github.com/MarkhamLee/productivity-music-stocks-weather-IoT-dashboard/tree/main/telemetry)
 
 
 **Heavily, heavily modded Skyrim, 4k textures, vastly improved graphics and character models, parallax mods, updated animations, updated combat, engine upgrades to enable FPS above 60 FPS without breaking the engine/causing weird visual artifacts, etc., running in 4k @ 180+ FPS --- *it's basically Eldenrim at this point...*** 
@@ -17,15 +17,18 @@ Also: I'm fully aware there are numerous off the shelf solutions, but having mor
 * For the case temps script it's exactly as above, but you have to pass the topic name and a refresh interval 
     * Note: while GPU and CPUs can have very quick frequency, temperature and load changes, case air temperature changes aren't as rapid so it doesn't need to refresh every second like the hardware sensors. 
 * At the moment detailed GPU monitoring (VRAM, Clock Freq, Power Draw) only works for NVIDIA GPUs, however, the solution can monitor temperatures for Rockchip 3588 GPUs and NPUs.
-* Has been tested with Intel X86 CPUs, Raspberry Pi 4bs and Rockchip 3588 CPUs/System on a Chip (SOCs), AMD tests are pending. For other platforms you can use the hardware_scan.py in the Linux folder to get the data on the available temperature sensors on those devices. An update to hardware scan to gather details on all available sensors is pending. 
+* Has been tested with Intel X86 CPUs, Raspberry Pi 4bs and Rockchip 3566 & 3588 CPUs/System on a Chip (SOCs), AMD Ryzen 5 5560U & Amlogic AML-S905X-CC. For other platforms you can use the hardware_scan.py in the Linux folder to get the data on the available CPU & temperature sensors on those devices. An update to hardware scan to gather details on all available sensors is pending. 
 
 
 #### What we have so far: 
-* Scripts for Linux machines with NVIDIA GPUs, scripts for Linux Machines without dedicated GPUs 
+* Scripts for Linux machines with NVIDIA GPUs, scripts for Linux Machines without dedicated GPUs & Linux machines running AMD CPUs w/ integrated AMD GPUs. 
 * All GPU data acquired directly from the GPU via NVIDIA SMI queries 
 * Scripts for Windows machines with NVIDIA GPUs, plus separate scripts for Linux machines without NVIDIA GPUs/Dedicated GPUs  
 * Scripts for Rockchip 3588 Running Ubuntu
+* Scripts for Rockchip 3566 devices 
+* Scripts for AMD Ryzen 5 mobile CPUs (tested on AMD 5560U)
 * Scripts for Raspberry Pi 4Bs running the official headless Ubuntu distro for Raspberry Pi
+* Scripts for Libre Computer Le Potato running the AML-S905X-CC chip
 * Three DHT22 temperature sensors connected to a Raspberry Pi gather intake air, internal case and exhaust  temperatures 
 * Mosquitto for receiving MQTT messages
 * InfluxDB for storing the data
@@ -41,11 +44,11 @@ Also: I'm fully aware there are numerous off the shelf solutions, but having mor
     * ~~Raspberry Pi running headless Ubuntu for RPI~~ [COMPLETE] 
     * ~~Orange Pi 5+ running [Joshua Riek's Ubuntu distribution for Rockchip 3588 devices]** (https://github.com/Joshua-Riek/ubuntu-rockchip)~~[COMPLETE] 
     * ~~Orange Pi 3B running Armbian~~[COMPLETE] 
-* Add FPS data to the W11 script(s) 
+* Add FPS data to the Windows script(s) 
 * CPU load per core 
 * Fan speeds: desktop cases, desktop GPUs, individual fans on SBCs, fans in cluster cases 
 * Find ways to get CPU clock speed and CPU and GPU temps on Windows and/or just possibly source data direct from AIDA64, or send the AIDA64 data to Grafana. 
-* Ability to add an "activity flag" to the data, I.e., what the cluster or gaming PC is being used for
+* Ability to add an "activity flag" to the data, I.e., game vs machine learning on my Windows machine. 
 * Use something like a Raspberry Pi Pico or to control case fans (for SBC cluster) depending on temperatures
 * ~~Split the HW data scripts into separate versions for Linux and Windows, may need to do a separate one for Raspberry Pis as well.~~ [COMPLETE]
 
@@ -89,4 +92,4 @@ any of the scripts being used to collect data. Removed the generic MQTT class as
 * I used [Matthieu Houdebine's Turing Smart Screen Repo](https://github.com/mathoudebine/turing-smart-screen-python) as a reference around how to use the LibreHardwareMonitor DLLs with Python 
 
 #### Technical Details 
-* Used a variety of machines given that a lot of the code is tailored towards certain devices, namely: 12th Gen i7 w/ NVIDIA 3090TI running W11, 11th Gen i5 w/ 3060TI running Ubuntu 22.04, Orange Pi 5 Plus running [Joshua Riek's Ubuntu distribution for Rockchip 3588 devices](https://github.com/Joshua-Riek/ubuntu-rockchip) 
+* Used a variety of machines given that a lot of the code is tailored towards certain devices, namely: 12th Gen i7 w/ NVIDIA 3090TI running W11, 12th Gen Intel NUC, Beelink SER5 Pro, Orange Pi 3B, 11th Gen i5 w/ 3060TI running Ubuntu 22.04, Orange Pi 5 Plus running [Joshua Riek's Ubuntu distribution for Rockchip 3588 devices](https://github.com/Joshua-Riek/ubuntu-rockchip) 

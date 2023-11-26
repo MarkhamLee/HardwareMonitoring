@@ -22,7 +22,7 @@ sensorList = list(tempDict.keys())
 print(sensorList)
 
 # save the keys as a json file
-with open('config/librelepotato_baseline.json', 'w') as f:
+with open('config/amd_5560U.json', 'w') as f:
     json.dump(sensorList, f, indent=4)
 
 print(psutil.cpu_freq(percpu=True))

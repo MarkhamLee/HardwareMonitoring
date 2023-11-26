@@ -2,7 +2,8 @@
 # Hardware Monitor for Linux & Windows:
 # https://github.com/MarkhamLee/hardware-monitor
 # quick and dirty script to test all the calls in the
-# linux CPU data script for Rockchip 3588 devices.
+# linux CPU data script for Libre Le Potato devices running the AML-S905X-CC
+# chip
 
 import os
 import sys
