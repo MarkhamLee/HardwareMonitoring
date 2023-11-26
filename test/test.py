@@ -11,7 +11,7 @@ import os
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
-from linux.linux_cpu_data import LinuxCpuData
+from linux.linux_cpu_data import LinuxCpuData  # noqa: E402
 
 getData = LinuxCpuData()
 
@@ -27,8 +27,8 @@ print(f'The CPU utilization is: {cpu_util}')
 
 
 # get RAM usage
-ramUsed = getData.getRamData()
-print(f'Current RAM usage is: {ramUsed}')
+ram_used = getData.getRamData()
+print(f'Current RAM usage is: {ram_used}')
 
 
 # get CPU temperature per core
@@ -40,5 +40,5 @@ temperature = getData.coreTemp()
 print(f'The CPU package temp is: {temperature}')
 
 # get clock speed per core
-allClocks = getData.freqPerCore()
-print(f'CPU clock speeds per core are as follows: {allClocks}')
+all_clocks = getData.freqPerCore()
+print(f'CPU clock speeds per core are as follows: {all_clocks}')
