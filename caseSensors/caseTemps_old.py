@@ -1,7 +1,9 @@
 # Markham Lee 2023
 # Hardware Monitor: https://github.com/MarkhamLee/HardwareMonitoring
-# the script gathers data from two DHT22 temperature sensors and then
-# publishes that data to a MQTT topic. Also, can strip out all the MQTT
+# Leaving this here, different approach and uses the obsolete
+# Adafruit_DHT library. The script gathers data from two DHT22
+# temperature sensors and then publishes that data to a MQTT topic.
+# Also, can strip out all the MQTT
 # stuff and just use the DHT22 code for building a weather station
 # or IoT temperature sensor with a Raspberry Pi note: the Adafruit
 # library is specific to a Raspberry Pi, using another type
