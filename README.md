@@ -8,7 +8,7 @@ Also: I'm fully aware there are numerous off the shelf solutions, but having mor
 
 
 **Heavily, heavily modded Skyrim, 4k textures, vastly improved graphics and character models, parallax mods, updated animations, updated combat, engine upgrades to enable FPS above 60 FPS without breaking the engine/causing weird visual artifacts, etc., running in 4k @ 180+ FPS --- *it's basically Eldenrim at this point...*** 
-![Dashboard Screenshot](/images/skyrim3.png)  
+![Dashboard Screenshot](/images/updated_screenshot.png)  
 
 #### How to run it
 * The windows script CLI pattern is file-name [path to general config json] [path to secrets json], you can use this pattern + the main method as a reference for using json configs with the Linux files. I didn't convert the one Windows script just there is an example of using this with json configs 
