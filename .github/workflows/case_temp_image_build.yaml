@@ -5,7 +5,7 @@ on:
     branches:
       - "main"
     paths:
-      - "case_sensors/*"
+      - "case_temps/*"
       - "common/*"
 jobs:
   docker:
@@ -26,7 +26,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./
-          file: ./case_sensors/Dockerfile
+          file: ./case_temps/Dockerfile
           platforms: linux/arm64
           push: true
           tags: markhamlee/:latest
