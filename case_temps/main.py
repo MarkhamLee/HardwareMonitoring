@@ -70,7 +70,7 @@ def get_temps(client: object, TOPIC: object,
         # ML models
 
         if heating_factor < 3:
-            time.sleep(600)
+            time.sleep(SLEEP_DURATION)
             continue
 
         payload = {
@@ -113,10 +113,10 @@ def main():
     MQTT_PORT = int(os.environ['MQTT_PORT'])
 
     # get unique client ID
-    clientID = device_utilities.get_client_id()
+    client_id = device_utilities.get_client_id()
 
     # get mqtt client
-    client, code = device_utilities.mqtt_client(clientID, MQTT_USER,
+    client, code = device_utilities.mqtt_client(client_id, MQTT_USER,
                                                 MQTT_SECRET, MQTT_BROKER,
                                                 MQTT_PORT)
 
