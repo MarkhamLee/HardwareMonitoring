@@ -1,6 +1,11 @@
+# Script/firmware for running the PC case sensors on a Raspberry Pi Pico.
+# Note: this is written in Micropython, also you'll need to create a file
+# called "key_data.py" to store your credentials
+# TODO: Add Wi-Fi Manager so that I don't need to include the credentials
+# in a file
 import network
 import dht
-import keyData
+import key_data
 import ujson
 import gc
 from umqtt.simple import MQTTClient
@@ -14,8 +19,8 @@ gc.enable()
 # method for connecting to Wi-Fi
 def network_connect():
 
-    SSID = keyData.SSID
-    SECRET = keyData.SECRET_W
+    SSID = key_data.SSID
+    SECRET = key_data.SECRET_W
 
     connection = network.WLAN(network.STA_IF)
     connection.active(True)
@@ -33,15 +38,15 @@ def network_connect():
 
 def mqtt_connect():
 
-    CLIENT_ID = keyData.clientID
+    CLIENT_ID = key_data.clientID
 
     client = MQTTClient(
         client_id=CLIENT_ID,
-        server=keyData.broker,
-        user=keyData.user,
-        password=keyData.secret,
+        server=key_data.broker,
+        user=key_data.user,
+        password=key_data.secret,
         keepalive=3600,
-        ssl_params={'server_hostname': keyData.broker})
+        ssl_params={'server_hostname': key_data.broker})
 
     # client = MQTTClient(client_id, mqtt_server, keepalive=3600)
 
@@ -121,7 +126,7 @@ def get_case_temps(interior: object, intake: object, exhaust: object,
                 machine.reset()
 
         except Exception as e:
-            print(f'failed to read data from sensor')
+            print('failed to read data from sensor')
             machine.reset()
 
         del payload, hf, exhaust_temp, intake_temp, interior_temp, \
@@ -150,7 +155,7 @@ def publish_mqtt(payload: dict, topic: str, client: object):
 
 def main():
 
-    TOPIC = keyData.topic
+    TOPIC = key_data.topic
 
     network_connect()
     client = mqtt_connect()

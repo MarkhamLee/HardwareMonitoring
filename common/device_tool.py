@@ -1,5 +1,5 @@
 # !/usr/bin/env python
-# Markham Lee (C) 2023
+# Markham Lee (C) 2023 - 2024
 # Hardware Monitor for Linux & Windows:
 # https://github.com/MarkhamLee/HardwareMonitoring
 # simple script to generate unique IDs for each device, uses UUID4
@@ -9,18 +9,11 @@
 # Putting this into its own script (for now) as so the various
 # clients can use it + I'll probably put other utilities into this
 # script, create an onboarding process, etc.
-
-import uuid
-from paho.mqtt import client as mqtt
-import logging
 import json
 import psutil
-
-
-# setup logging for static methods
-logging.basicConfig(filename='hardwareData.log', level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)s %(name)s %(threadName)s\
-                        : %(message)s')
+import uuid
+from paho.mqtt import client as mqtt
+from logging_util import logger
 
 
 class DeviceUtilities():
@@ -33,7 +26,7 @@ class DeviceUtilities():
     # method for parsing the config file with connection data +
     # the secrets file
     @staticmethod
-    def loadConfigs(configFile, secretsFile):
+    def load_configs(configFile, secretsFile):
 
         with open(configFile, "r") as file:
             data = json.load(file)
@@ -51,14 +44,14 @@ class DeviceUtilities():
         return broker, port, topic, user, password
 
     @staticmethod
-    def getClientID():
+    def get_client_id():
 
         clientID = str(uuid.uuid4())
 
         return clientID
 
     @staticmethod
-    def tempSensorScan():
+    def temp_sensor_scan():
 
         # get the dictionary of all sensor data
         tempDict = psutil.sensors_temperatures()
@@ -69,21 +62,21 @@ class DeviceUtilities():
         return sensorList
 
     @staticmethod
-    def mqttClient(clientID: str, username: str, pwd: str,
-                   host: str, port: int):
+    def mqtt_client(clientID: str, username: str, pwd: str,
+                    host: str, port: int):
 
-        def connectionStatus(client, userdata, flags, code):
+        def connection_status(client, userdata, flags, code):
 
             if code == 0:
                 print('connected')
 
             else:
                 print(f'connection error: {code} retrying...')
-                logging.DEBUG(f'connection error occured, return code: {code}')
+                logger.DEBUG(f'connection error occured, return code: {code}')
 
         client = mqtt.Client(clientID)
         client.username_pw_set(username=username, password=pwd)
-        client.on_connect = connectionStatus
+        client.on_connect = connection_status
 
         code = client.connect(host, port)
 

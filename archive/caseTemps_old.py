@@ -1,4 +1,7 @@
-# Markham Lee 2023
+# old version that used a non obsolete library to pull data from the DHT22
+# sensors just storing here for archival reasons
+
+# Markham Lee 2023 - 2024
 # Hardware Monitor: https://github.com/MarkhamLee/HardwareMonitoring
 # Leaving this here, different approach and uses the obsolete
 # Adafruit_DHT library. The script gathers data from two DHT22
@@ -22,7 +25,7 @@ import logging
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
-from common.deviceTools import DeviceUtilities  # noqa: E402
+from common.device_tool import DeviceUtilities  # noqa: E402
 
 # setup logging for static methods
 logging.basicConfig(filename='hardwareData.log', level=logging.DEBUG,

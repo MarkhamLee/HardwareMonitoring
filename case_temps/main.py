@@ -2,24 +2,25 @@
 # Hardware Monitor: https://github.com/MarkhamLee/HardwareMonitoring
 # the script gathers data from three DHT22 temperature sensors and then
 # publishes that data to a MQTT topic.
-
 import adafruit_dht
 import board
 import json
-import time
 import gc
 import os
-import logging
-import uuid
-from paho.mqtt import client as mqtt
+import sys
+import time
 
-# setup logging for static methods
-logging.basicConfig(filename='hardwareData.log', level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)s %(name)s %(threadName)s\
-                        : %(message)s')
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_dir)
+
+from common.logging_util import logger  # noqa: E402
+from common.device_tool import DeviceUtilities  # noqa: E402
+
+device_utilities = DeviceUtilities()
 
 
-def getTemps(client: object, topic: object, interval: int):
+def get_temps(client: object, TOPIC: object,
+              INTERVAL: int, SLEEP_DURATION: int):
 
     # the use pulseio parameter is suggested parameter for a Raspberry Pi
     # may not need to use it with other types of SBCs
@@ -27,13 +28,13 @@ def getTemps(client: object, topic: object, interval: int):
     exhaust_device = adafruit_dht.DHT22(board.D5, use_pulseio=False)
     intake_device = adafruit_dht.DHT22(board.D6, use_pulseio=False)
 
+    logger.info('Starting PC Case temperature monitoring...')
+
     while True:
 
         # get temperature and humidity data, not using humidity at the moment,
-        # but may use in the future TODO: add exception handling, i.e. log
-        # when one of the individual sensors is offline or malfunctioning
-        # these sensors are kind of "slow" takes a few seconds to gather data
-        # from each one
+        # but may use in the future TODO: refactor to use different/better
+        # sensors as the DHT22 returns read errors about 1/3 of the time.
 
         try:
             temp_interior = interior_device.temperature
@@ -41,7 +42,7 @@ def getTemps(client: object, topic: object, interval: int):
             temp_intake = intake_device.temperature
 
         except RuntimeError as error:
-            logging.debug(f'Device runtime error {error}')
+            logger.debug(f'Device runtime error {error}')
 
             # TODO: mqtt message to note device read error,
             # log said errors in a DB for later analysis
@@ -49,7 +50,7 @@ def getTemps(client: object, topic: object, interval: int):
             continue
 
         except Exception as error:
-            logging.debug(f'Device read error {error}')
+            logger.debug(f'Device read error {error}')
             time.sleep(10)
             continue
 
@@ -83,11 +84,11 @@ def getTemps(client: object, topic: object, interval: int):
         print(payload)
 
         try:
-            result = client.publish(topic, payload)
+            result = client.publish(TOPIC, payload)
             status = result[0]
 
         except Exception as error:
-            logging.debug(f'MQTT connection error: {error}\
+            logger.debug(f'MQTT connection error: {error}\
                           with status: {status}')
 
         # given that this is a RAM constrained device,
@@ -97,45 +98,13 @@ def getTemps(client: object, topic: object, interval: int):
         del payload, temp_interior, temp_exhaust, status, result
         gc.collect()
 
-        time.sleep(interval)
-
-
-def mqttClient(clientID: str, username: str, pwd: str,
-               host: str, port: int):
-
-    def connectionStatus(client, userdata, flags, code):
-
-        if code == 0:
-            print('connected')
-
-        else:
-            print(f'connection error: {code} retrying...')
-            logging.DEBUG(f'connection error occured, return code: {code}')
-
-    client = mqtt.Client(clientID)
-    client.username_pw_set(username=username, password=pwd)
-    client.on_connect = connectionStatus
-
-    code = client.connect(host, port)
-
-    # this is so that the client will attempt to reconnect automatically/
-    # no need to add reconnect
-    # logic.
-    client.loop_start()
-
-    return client, code
-
-
-def getClientID():
-
-    clientID = str(uuid.uuid4())
-
-    return clientID
+        time.sleep(INTERVAL)
 
 
 def main():
 
     # load environmental variables
+    SLEEP_DURATION = int(os.environ['SLEEP_DURATION'])
     TOPIC = os.environ['TOPIC']
     INTERVAL = int(os.environ['INTERVAL'])
     MQTT_BROKER = os.environ['MQTT_BROKER']
@@ -144,16 +113,16 @@ def main():
     MQTT_PORT = int(os.environ['MQTT_PORT'])
 
     # get unique client ID
-    clientID = getClientID()
+    clientID = device_utilities.get_client_id()
 
     # get mqtt client
-    client, code = mqttClient(clientID, MQTT_USER,
-                              MQTT_SECRET, MQTT_BROKER,
-                              MQTT_PORT)
+    client, code = device_utilities.mqtt_client(clientID, MQTT_USER,
+                                                MQTT_SECRET, MQTT_BROKER,
+                                                MQTT_PORT)
 
     # start data monitoring
     try:
-        getTemps(client, TOPIC, INTERVAL)
+        get_temps(client, TOPIC, INTERVAL, SLEEP_DURATION)
 
     finally:
         client.loop_stop()
