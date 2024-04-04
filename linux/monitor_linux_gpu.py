@@ -3,20 +3,19 @@
 # https://github.com/MarkhamLee/HardwareMonitoring
 # For Linux devices with an NVIDIA GPU
 # CLI instructions <filename> <MQTT topic name as a string>
-
 import json
-import time
 import gc
-import os
 import logging
+import os
 import sys
+from time import sleep
 from linux_cpu_data import LinuxCpuData
 
 # this allows us to import modules from the parent directory
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
-from common.deviceTools import DeviceUtilities  # noqa: E402
+from common.device_tool import DeviceUtilities  # noqa: E402
 from common.nvidia_gpu import NvidiaSensors  # noqa: E402
 
 logging.basicConfig(filename='hardwareDataLinuxGPU.log', level=logging.DEBUG,
@@ -24,62 +23,65 @@ logging.basicConfig(filename='hardwareDataLinuxGPU.log', level=logging.DEBUG,
                         : %(message)s')
 
 
-def monitor(client: object, getData: object, getGpuData: object, topic: str):
+def monitor(client: object, get_data: object,
+            get_gpu_data: object, TOPIC: str, INTERVAL: int):
 
     while True:
 
-        time.sleep(1)
-
         # get CPU utilization
-        cpuUtil = getData.getCPUData()
+        cpu_util = get_data.get_cpu_data()
 
         # get current RAM use
-        ramUse = getData.getRamData()
+        ram_use = get_data.get_ram_data()
 
         # get current freq and core count
-        cpuFreq, coreCount = getData.getFreq()
+        cpu_freq, core_count = get_data.get_freq()
 
         # get CPU temperature
-        cpuTemp = getData.coreTemp()
+        cpu_temp = get_data.core_temp()
 
         # get GPU Data
-        temp, gpuLoad, gpuVram, gpuPower, gpuClock = getGpuData.gpuQuery()
+        temp, gpu_load, gpu_vram, gpu_power, \
+            gpu_clock = get_gpu_data.gpu_query()
 
         # build payload
         payload = {
-            "cpuTemp": cpuTemp,
-            "cpuFreq": cpuFreq,
-            "cpuUse": cpuUtil,
-            "ramUse": ramUse,
+            "cpuTemp": cpu_temp,
+            "cpuFreq": cpu_freq,
+            "cpuUse": cpu_util,
+            "ramUse": ram_use,
             "gpuTemp": temp,
-            "gpuLoad": gpuLoad,
-            "gpuVram": gpuVram,
-            "gpuPower": gpuPower,
-            "gpuClock": gpuClock
+            "gpuLoad": gpu_load,
+            "gpuVram": gpu_vram,
+            "gpuPower": gpu_power,
+            "gpuClock": gpu_clock
         }
 
         payload = json.dumps(payload)
 
-        result = client.publish(topic, payload)
+        result = client.publish(TOPIC, payload)
         status = result[0]
         if status != 0:
 
-            print(f'Failed to send {payload} to: {topic}')
+            print(f'Failed to send {payload} to: {TOPIC}')
             logging.debug(f'MQTT publishing failure, return code: {status}')
 
-        del payload, cpuUtil, ramUse, cpuFreq, cpuTemp, status, result
+        del payload, cpu_util, ram_use, cpu_freq, cpu_temp, status, \
+            result, gpu_load, gpu_vram, gpu_power, gpu_clock
         gc.collect()
+        sleep(INTERVAL)
 
 
 def main():
 
     # instantiate utilities class
-    deviceUtilities = DeviceUtilities()
+    device_utilities = DeviceUtilities()
 
     # parse command line arguments
     args = sys.argv[1:]
 
     TOPIC = args[0]
+    INTERVAL = args[1]
 
     # load environmental variables
     MQTT_BROKER = os.environ["MQTT_BROKER"]
@@ -88,20 +90,20 @@ def main():
     MQTT_PORT = int(os.environ['MQTT_PORT'])
 
     # get unique client ID
-    clientID = deviceUtilities.getClientID()
+    client_id = device_utilities.getClientID()
 
     # get mqtt client
-    client, code = deviceUtilities.mqttClient(clientID, MQTT_USER,
-                                              MQTT_SECRET, MQTT_BROKER,
-                                              MQTT_PORT)
+    client, code = device_utilities.mqttClient(client_id, MQTT_USER,
+                                               MQTT_SECRET, MQTT_BROKER,
+                                               MQTT_PORT)
 
     # instantiate CPU & GPU data classes
-    getGpuData = NvidiaSensors()
-    getData = LinuxCpuData()
+    get_gpu_data = NvidiaSensors()
+    get_data = LinuxCpuData()
 
     # start monitoring
     try:
-        monitor(client, getData, getGpuData, TOPIC)
+        monitor(client, get_data, get_gpu_data, TOPIC, INTERVAL)
 
     finally:
         client.loop_stop()

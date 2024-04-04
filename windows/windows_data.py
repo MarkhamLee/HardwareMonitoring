@@ -9,8 +9,6 @@
 # implement with Python All the GPU data comes from NVIDI SMI Queries, you
 # can read more here:
 # https://nvidia.custhelp.com/app/answers/detail/a_id/3751/~/useful-nvidia-smi-queries
-
-
 import psutil
 import os
 import sys
@@ -36,7 +34,7 @@ class WindowsSensors():
             try:
                 sys.exit(0)
 
-            except:
+            except Exception as e:
                 os._exit(0)
 
         # load C# dllls

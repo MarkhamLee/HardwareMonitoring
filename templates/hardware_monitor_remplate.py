@@ -18,7 +18,7 @@ parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
 
-from common.deviceTools import DeviceUtilities
+from common.device_tool import DeviceUtilities
 
 logging.basicConfig(filename='hardwareData.log', level=logging.DEBUG,
 format='%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')

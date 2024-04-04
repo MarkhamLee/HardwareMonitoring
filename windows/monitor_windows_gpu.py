@@ -19,7 +19,7 @@ from windows_data import WindowsSensors
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
-from common.deviceTools import DeviceUtilities  # noqa: E402
+from common.device_tool import DeviceUtilities  # noqa: E402
 from common.nvidia_gpu import NvidiaSensors  # noqa: E402
 
 logging.basicConfig(filename='hardwareDataWindows.log', level=logging.DEBUG,
@@ -29,12 +29,12 @@ logging.basicConfig(filename='hardwareDataWindows.log', level=logging.DEBUG,
 
 def monitor(client: object, cpu_data: object, gpu_data: object, topic: str):
 
-    logging.debug('HW monitoring started')
+    logging.debug('Windows HW monitoring started')
 
     while True:
 
         # get CPU data clock speed and temperature
-        bigFreq, littleFreq, cpuTemp = cpu_data.getLibreData()
+        bigF_freq, littleFreq, cpuTemp = cpu_data.getLibreData()
 
         # get GPU data
         gpuTemp, gpuUtilization, vramUse, gpuPower, \
@@ -80,7 +80,7 @@ def monitor(client: object, cpu_data: object, gpu_data: object, topic: str):
 def main():
 
     # instantiate utilities class
-    deviceUtilities = DeviceUtilities()
+    device_utilities = DeviceUtilities()
 
     # parse command line arguments
     args = sys.argv[1:]
@@ -89,15 +89,15 @@ def main():
     secrets = args[1]
 
     # load config file(s)
-    broker, port, topic, user, pwd = deviceUtilities.loadConfigs(configFile,
+    broker, port, topic, user, pwd = device_utilities.loadConfigs(configFile,
                                                                  secrets)
 
     # get unique client ID
-    clientID = deviceUtilities.getClientID()
+    clientID = device_utilities.getClientID()
 
     # get mqtt client
-    client, code = deviceUtilities.mqttClient(clientID, user, pwd, broker,
-                                              port)
+    client, code = device_utilities.mqttClient(clientID, user, pwd, broker,
+                                               port)
 
     # instantiate CPU data class
     win_data = WindowsSensors()
