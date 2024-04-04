@@ -8,7 +8,7 @@ import json
 import gc
 import os
 import sys
-import time
+from time import sleep
 
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
@@ -46,12 +46,12 @@ def get_temps(client: object, TOPIC: object,
 
             # TODO: mqtt message to note device read error,
             # log said errors in a DB for later analysis
-            time.sleep(10)
+            sleep(10)
             continue
 
         except Exception as error:
             logger.debug(f'Device read error {error}')
-            time.sleep(10)
+            sleep(10)
             continue
 
         temp_exhaust = round(temp_exhaust, 2)
@@ -70,7 +70,7 @@ def get_temps(client: object, TOPIC: object,
         # ML models
 
         if heating_factor < 3:
-            time.sleep(SLEEP_DURATION)
+            sleep(SLEEP_DURATION)
             continue
 
         payload = {
@@ -97,7 +97,7 @@ def get_temps(client: object, TOPIC: object,
         del payload, temp_interior, temp_exhaust, status, result
         gc.collect()
 
-        time.sleep(INTERVAL)
+        sleep(INTERVAL)
 
 
 def main():
