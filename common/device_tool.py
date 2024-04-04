@@ -2,14 +2,8 @@
 # Markham Lee (C) 2023 - 2024
 # Hardware Monitor for Linux & Windows:
 # https://github.com/MarkhamLee/HardwareMonitoring
-# simple script to generate unique IDs for each device, uses UUID4
-# as that ensures we get a truly unique ID and not one derived from
-# the MAC address, with the associated security risks such an
-# approach can bring.
-# Putting this into its own script (for now) as so the various
-# clients can use it + I'll probably put other utilities into this
-# script, create an onboarding process, etc.
-import json
+# General utilities for sendign data via MQTT and
+# scanning a device to see the available sensors
 import psutil
 import uuid
 from paho.mqtt import client as mqtt
@@ -22,26 +16,6 @@ class DeviceUtilities():
     def __init__(self):
 
         pass
-
-    # method for parsing the config file with connection data +
-    # the secrets file
-    @staticmethod
-    def load_configs(configFile, secretsFile):
-
-        with open(configFile, "r") as file:
-            data = json.load(file)
-
-        broker = data["broker"]
-        port = data["port"]
-        topic = data["topic"]
-
-        with open(secretsFile, "r") as secrets:
-            data = json.load(secrets)
-
-        user = data["user"]
-        password = data["password"]
-
-        return broker, port, topic, user, password
 
     @staticmethod
     def get_client_id():
