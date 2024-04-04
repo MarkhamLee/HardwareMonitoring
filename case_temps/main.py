@@ -74,14 +74,13 @@ def get_temps(client: object, TOPIC: object,
             continue
 
         payload = {
-                "ct": temp_interior,
-                "et": temp_exhaust,
-                "it": temp_intake,
-                "hf": heating_factor
+            "ct": temp_interior,
+            "et": temp_exhaust,
+            "it": temp_intake,
+            "hf": heating_factor
         }
 
         payload = json.dumps(payload)
-        print(payload)
 
         try:
             result = client.publish(TOPIC, payload)
