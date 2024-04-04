@@ -1,12 +1,10 @@
-# Markham Lee 2023
+# Markham Lee 2023 - 2024
 # Retrieving temp, load, etc., data from NVIDIA GPUs
 # # https://github.com/MarkhamLee/HardwareMonitoring
 # All the GPU data comes from NVIDI SMI Queries, you can read more here:
 # https://nvidia.custhelp.com/app/answers/detail/a_id/3751/~/useful-nvidia-smi-queries
 # this script is platform agnostic, should work exactly the same on Linux and
 # Windows devices running x86 processors
-
-
 import subprocess as sp
 
 
@@ -22,7 +20,7 @@ class NvidiaSensors():
     # set up.
 
     @staticmethod
-    def smiParser(query: str):
+    def smi_parser(query: str):
 
         cmd = "nvidia-smi --query-gpu=" + query + " --format=csv,noheader"
         data = sp.check_output(cmd, shell=True)
@@ -37,7 +35,7 @@ class NvidiaSensors():
     # as whether it's one item or six, these queries run in about 30-40ms,
     # doing them separate it was closer to 250ms
     @staticmethod
-    def gpuQuery():
+    def gpu_query():
 
         query = ("temperature.gpu,utilization.gpu,memory.used,power.draw,"
                  "clocks.current.graphics,encoder.stats.averageFps")
@@ -47,10 +45,10 @@ class NvidiaSensors():
         # split out each value from the returned list of values
 
         temp = int(data[0])
-        gpuLoad = int(data[1]) / 100
-        gpuVram = round(((float(data[2])) / 1024), 2)
-        gpuPower = round((float(data[3])) / 100, 2)
-        gpuClock = int(data[4])
+        gpu_load = int(data[1]) / 100
+        gpu_vram = round(((float(data[2])) / 1024), 2)
+        gpu_power = round((float(data[3])) / 100, 2)
+        gpu_clock = int(data[4])
 
         # commented this out, as the FPS query shows the average across
         # all apps not useful for when I'm playing games. Will need to look
@@ -59,13 +57,13 @@ class NvidiaSensors():
         # get this data via SMI queries that I just haven't discovered yet.
         # fps = int(data[5]) #
 
-        return temp, gpuLoad, gpuVram, gpuPower, gpuClock
+        return temp, gpu_load, gpu_vram, gpu_power, gpu_clock
 
     # the following are the individual queries for the data points included in
     # the GPU query, I just put these here in case I needed them/needed to just
     # get an individual data point.
     @staticmethod
-    def gpuLoad():
+    def gpu_load():
 
         query = "utilization.gpu"
         data = NvidiaSensors.smiParser(query)
@@ -74,7 +72,7 @@ class NvidiaSensors():
         return data
 
     @staticmethod
-    def gpuTemp():
+    def gpu_temp():
 
         query = "temperature.gpu"
         data = NvidiaSensors.smiParser(query)
@@ -83,7 +81,7 @@ class NvidiaSensors():
         return data
 
     @staticmethod
-    def vramUsed():
+    def vram_used():
 
         query = "memory.used"
         data = NvidiaSensors.smiParser(query)
@@ -92,7 +90,7 @@ class NvidiaSensors():
         return data
 
     @staticmethod
-    def gpuPower():
+    def gpu_power():
 
         query = 'power.draw'
         data = NvidiaSensors.smiParser(query)
@@ -101,7 +99,7 @@ class NvidiaSensors():
         return data
 
     @staticmethod
-    def gpuFPS():
+    def gpu_fps():
 
         query = 'encoder.stats.averageFps'
         data = NvidiaSensors.smiParser(query)
@@ -110,7 +108,7 @@ class NvidiaSensors():
         return data
 
     @staticmethod
-    def gpuClock():
+    def gpu_clock():
 
         query = 'clocks.current.graphics'
         data = NvidiaSensors.smiParser(query)

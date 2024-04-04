@@ -22,7 +22,7 @@ from linux_cpu_data import LinuxCpuData
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
-from common.deviceTools import DeviceUtilities  # noqa:  E402
+from common.device_tool import DeviceUtilities  # noqa:  E402
 
 # create logger for logging errors, exceptions and the like
 logging.basicConfig(filename='hardwareDataRockChip.log', level=logging.DEBUG,
