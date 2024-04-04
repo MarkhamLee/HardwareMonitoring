@@ -8,7 +8,8 @@
 /hardwareSensors/opi5plus.py 
 /windows/hardwareData.log
 /windows/config/secrets.json 
-/windows/config/windowsConfig.json 
+/windows/config/windowsConfig.json
+/windows/hardwareDataWindows.log
 /windows/__pycache__/*
 /linux/__pycache__/*
 /linux/config/config.json

@@ -1,15 +1,14 @@
-# Markham Lee (C) 2023
+# Markham Lee (C) 2023 - 2024
 # Hardware Monitor for Linux & Windows:
 # https://github.com/MarkhamLee/HardwareMonitoring
 # script to retrieve Windows data and publish it to an MQTT topic
 # leverages psutil + the LibreHardwareMonitor library
-
 import json
-import time
 import gc
-import os
 import logging
+import os
 import sys
+import time
 from windows_data import WindowsSensors
 
 # this allows us to import modules, classes, scripts et al from the
@@ -27,54 +26,56 @@ logging.basicConfig(filename='hardwareDataWindows.log', level=logging.DEBUG,
                         : %(message)s')
 
 
-def monitor(client: object, cpu_data: object, gpu_data: object, topic: str):
+def monitor(client: object, cpu_data: object, gpu_data: object, TOPIC: str):
 
-    logging.debug('Windows HW monitoring started')
+    logging.debug('Windows HW monitoring started....')
+
+    INTERVAL = int(os.environ['GAME_INTERVAL'])
 
     while True:
 
         # get CPU data clock speed and temperature
-        bigF_freq, littleFreq, cpuTemp = cpu_data.getLibreData()
+        big_freq, little_freq, cpu_temp = cpu_data.get_libre_data()
 
         # get GPU data
-        gpuTemp, gpuUtilization, vramUse, gpuPower, \
-            gpuClock = gpu_data.gpuQuery()
+        gpu_temp, gpu_utilization, vram_use, gpu_power, \
+            gpu_clock = gpu_data.gpu_query()
 
         # get CPU load
-        cpuLoad = cpu_data.getCPUData()
+        cpu_load = cpu_data.get_cpu_data()
 
         # get RAM use
-        ramUse = cpu_data.getRAM()
+        ram_use = cpu_data.get_ram()
 
         payload = {
-            "gpuTemp": gpuTemp,
-            "cpuTemp": cpuTemp,
-            "cpuFreqBig": bigFreq,
-            "cpuFreqLittle": littleFreq,
-            "gpuLoad": gpuUtilization,
-            "cpuLoad": cpuLoad,
-            "ramUtilization": ramUse,
-            "vramUtilization": vramUse,
-            "gpuClock": gpuClock,
-            "gpuPower": gpuPower
+            "gpuTemp": gpu_temp,
+            "cpuTemp": cpu_temp,
+            "cpuFreqBig": big_freq,
+            "cpuFreqLittle": little_freq,
+            "gpuLoad": gpu_utilization,
+            "cpuLoad": cpu_load,
+            "ramUtilization": ram_use,
+            "vramUtilization": vram_use,
+            "gpuClock": gpu_clock,
+            "gpuPower": gpu_power
         }
 
         payload = json.dumps(payload)
 
-        result = client.publish(topic, payload)
+        result = client.publish(TOPIC, payload)
         status = result[0]
         if status == 0:
-            print(f'Data {payload} was published to: {topic} with status:\
+            print(f'Data {payload} was published to: {TOPIC} with status:\
                   {status}')
         else:
-            print(f'Failed to send {payload} to: {topic}')
+            print(f'Failed to send {payload} to: {TOPIC}')
 
-        del payload, gpuTemp, cpuTemp, bigFreq, littleFreq, gpuUtilization, \
-            cpuLoad, ramUse, vramUse,
-        gpuClock, gpuPower
+        del payload, gpu_temp, cpu_temp, big_freq, little_freq, \
+            gpu_utilization, cpu_load, ram_use, vram_use, \
+            gpu_clock, gpu_power
 
         gc.collect()
-        time.sleep(1)
+        time.sleep(INTERVAL)
 
 
 def main():
@@ -82,22 +83,23 @@ def main():
     # instantiate utilities class
     device_utilities = DeviceUtilities()
 
-    # parse command line arguments
-    args = sys.argv[1:]
+    # operating parameters
+    TOPIC = os.environ['GAME_TOPIC']
 
-    configFile = args[0]
-    secrets = args[1]
-
-    # load config file(s)
-    broker, port, topic, user, pwd = device_utilities.loadConfigs(configFile,
-                                                                 secrets)
+    # load environmental variables
+    MQTT_BROKER = os.environ["MQTT_BROKER"]
+    MQTT_USER = os.environ['MQTT_USER']
+    MQTT_SECRET = os.environ['MQTT_SECRET']
+    MQTT_PORT = int(os.environ['MQTT_PORT'])
 
     # get unique client ID
-    clientID = device_utilities.getClientID()
+    client_id = device_utilities.get_client_id()
 
     # get mqtt client
-    client, code = device_utilities.mqttClient(clientID, user, pwd, broker,
-                                               port)
+    client, code = device_utilities.mqtt_client(client_id, MQTT_USER,
+                                                MQTT_SECRET,
+                                                MQTT_BROKER,
+                                                MQTT_PORT)
 
     # instantiate CPU data class
     win_data = WindowsSensors()
@@ -107,7 +109,7 @@ def main():
 
     # start monitoring
     try:
-        monitor(client, win_data, gpu_data, topic)
+        monitor(client, win_data, gpu_data, TOPIC)
 
     finally:
         client.loop_stop()

@@ -1,4 +1,4 @@
-# Markham Lee 2023
+# Markham Lee 2023 - 2024
 # Hardware Monitor for Windows & Linux
 # # https://github.com/MarkhamLee/HardwareMonitoring
 # This program makes use of the LibreHardWareMonitor repo:
@@ -9,11 +9,11 @@
 # implement with Python All the GPU data comes from NVIDI SMI Queries, you
 # can read more here:
 # https://nvidia.custhelp.com/app/answers/detail/a_id/3751/~/useful-nvidia-smi-queries
-import psutil
-import os
-import sys
 import clr
 import ctypes
+import os
+import psutil
+import sys
 from statistics import mean
 
 
@@ -22,9 +22,9 @@ class WindowsSensors():
     def __init__(self):
 
         # create paths for C# .dlls for retrieving CPU data
-        libPath1 = ('\\Librehardwaremonitor\\'
-                    'LibreHardwareMonitorLib.dll')
-        libpath2 = ('\\Librehardwaremonitor\\HidSharp.dll')
+        lib_path1 = ('\\Librehardwaremonitor\\'
+                     'LibreHardwareMonitorLib.dll')
+        lib_path2 = ('\\Librehardwaremonitor\\HidSharp.dll')
 
         # verify that the app is running with Admin permission
         if ctypes.windll.shell32.IsUserAnAdmin() == 0:
@@ -38,8 +38,8 @@ class WindowsSensors():
                 os._exit(0)
 
         # load C# dllls
-        clr.AddReference(os.getcwd() + libPath1)
-        clr.AddReference(os.getcwd() + libpath2)
+        clr.AddReference(os.getcwd() + lib_path1)
+        clr.AddReference(os.getcwd() + lib_path2)
 
         # You'll get a squiggly line or error indication for an unresolved
         # import, don't worry, it will work anyway
@@ -48,23 +48,23 @@ class WindowsSensors():
         self.Hardware = Hardware
 
         # get handler
-        self.getHandlers()
+        self.get_handlers()
 
-    def getHandlers(self):
+    def get_handlers(self):
 
         self.handler = self.Hardware.Computer()
         self.handler.IsCpuEnabled = True
 
     # we use Libre Hardware Monitor to get the two datapoints we can't get
     # with psutil on Windows: CPU frequency and CPU temp
-    def getLibreData(self):
+    def get_libre_data(self):
 
         self.handler.Open()
 
         # create variables
-        cpuCount = 0
-        bigFreq = []
-        littleFreq = []
+        cpu_count = 0
+        big_freq = []
+        little_freq = []
 
         for hw in self.handler.Hardware:
             for sensor in hw.Sensors:
@@ -77,23 +77,23 @@ class WindowsSensors():
                     SensorType.Clock and str(sensor.Name).\
                         startswith("CPU Core #"):
                     cpu_clock = round(float(sensor.Value), 2)
-                    cpuCount += 1
-                    if cpuCount < 8:
-                        bigFreq.append(cpu_clock)
+                    cpu_count += 1
+                    if cpu_count < 8:
+                        big_freq.append(cpu_clock)
 
                     else:
-                        littleFreq.append(cpu_clock)
+                        little_freq.append(cpu_clock)
 
         self.handler.Close()
 
-        bigFreqMean = round(mean(bigFreq), 1)
-        littleFreqMean = round(mean(littleFreq), 1)
+        big_freq_mean = round(mean(big_freq), 1)
+        little_freq_mean = round(mean(little_freq), 1)
 
-        return bigFreqMean, littleFreqMean, cpu_temp
+        return big_freq_mean, little_freq_mean, cpu_temp
 
     # get average CPU load for all cores via the PSutil library
     @staticmethod
-    def getCPUData():
+    def get_cpu_data():
 
         # CPU load
         cpu_util = (psutil.cpu_percent()) / 100
@@ -102,10 +102,10 @@ class WindowsSensors():
         return cpu_util
 
     @staticmethod
-    def getRAM():
+    def get_ram():
 
         # RAM usage
-        ramUse = (psutil. virtual_memory()[3]) / 1073741824
-        ramUse = round(ramUse, 2)
+        ram_use = (psutil. virtual_memory()[3]) / 1073741824
+        ram_use = round(ram_use, 2)
 
-        return ramUse
+        return ram_use

@@ -90,12 +90,12 @@ def main():
     MQTT_PORT = int(os.environ['MQTT_PORT'])
 
     # get unique client ID
-    client_id = device_utilities.getClientID()
+    client_id = device_utilities.get_client_id()
 
     # get mqtt client
-    client, code = device_utilities.mqttClient(client_id, MQTT_USER,
-                                               MQTT_SECRET, MQTT_BROKER,
-                                               MQTT_PORT)
+    client, code = device_utilities.mqtt_client(client_id, MQTT_USER,
+                                                MQTT_SECRET, MQTT_BROKER,
+                                                MQTT_PORT)
 
     # instantiate CPU & GPU data classes
     get_gpu_data = NvidiaSensors()

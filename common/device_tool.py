@@ -7,7 +7,7 @@
 import psutil
 import uuid
 from paho.mqtt import client as mqtt
-from logging_util import logger
+from common.logging_util import logger
 
 
 class DeviceUtilities():

@@ -35,7 +35,7 @@ def monitor(client: object, get_data: object, TOPIC: str, INTERVAL: int):
         ram_use = get_data.get_ram_data()
 
         # get current freq and core count
-        cpu_freq, coreCount = get_data.getFreq()
+        cpu_freq, core_count = get_data.get_freq()
 
         # get CPU temperature
         cpu_temp = get_data.core_temp()
@@ -64,13 +64,10 @@ def monitor(client: object, get_data: object, TOPIC: str, INTERVAL: int):
 def main():
 
     # instantiate utilities class
-    deviceUtilities = DeviceUtilities()
+    device_utilities = DeviceUtilities()
 
-    # parse command line arguments
-    args = sys.argv[1:]
-
-    TOPIC = args[0]
-    INTERVAL = args[1]
+    TOPIC = os.environ['TOPIC']
+    INTERVAL = os.environ['INTERVAL']
 
     # load environmental variables
     MQTT_BROKER = os.environ["MQTT_BROKER"]
@@ -79,19 +76,19 @@ def main():
     MQTT_PORT = int(os.environ['MQTT_PORT'])
 
     # get unique client ID
-    clientID = deviceUtilities.getClientID()
+    client_id = device_utilities.get_client_id()
 
     # get mqtt client
-    client, code = deviceUtilities.mqttClient(clientID, MQTT_USER,
-                                              MQTT_SECRET, MQTT_BROKER,
-                                              MQTT_PORT)
+    client, code = device_utilities.mqtt_client(client_id, MQTT_USER,
+                                                MQTT_SECRET, MQTT_BROKER,
+                                                MQTT_PORT)
 
     # instantiate CPU & GPU data classes
-    getData = LinuxCpuData()
+    get_data = LinuxCpuData()
 
     # start data monitoring
     try:
-        monitor(client, getData, TOPIC, INTERVAL)
+        monitor(client, get_data, TOPIC, INTERVAL)
 
     finally:
         client.loop_stop()

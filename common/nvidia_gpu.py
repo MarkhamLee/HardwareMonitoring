@@ -40,7 +40,7 @@ class NvidiaSensors():
         query = ("temperature.gpu,utilization.gpu,memory.used,power.draw,"
                  "clocks.current.graphics,encoder.stats.averageFps")
 
-        data = NvidiaSensors.smiParser(query)
+        data = NvidiaSensors.smi_parser(query)
 
         # split out each value from the returned list of values
 
@@ -66,7 +66,7 @@ class NvidiaSensors():
     def gpu_load():
 
         query = "utilization.gpu"
-        data = NvidiaSensors.smiParser(query)
+        data = NvidiaSensors.smi_parser(query)
         data = int(data[0])
 
         return data
@@ -75,7 +75,7 @@ class NvidiaSensors():
     def gpu_temp():
 
         query = "temperature.gpu"
-        data = NvidiaSensors.smiParser(query)
+        data = NvidiaSensors.smi_parser(query)
         data = int(data[0])
 
         return data
@@ -84,7 +84,7 @@ class NvidiaSensors():
     def vram_used():
 
         query = "memory.used"
-        data = NvidiaSensors.smiParser(query)
+        data = NvidiaSensors.smi_parser(query)
         data = round((float(data[0]) / 1024), 2)
 
         return data
@@ -93,7 +93,7 @@ class NvidiaSensors():
     def gpu_power():
 
         query = 'power.draw'
-        data = NvidiaSensors.smiParser(query)
+        data = NvidiaSensors.smi_parser(query)
         data = round((float(data[0])) / 100, 2)
 
         return data
@@ -102,7 +102,7 @@ class NvidiaSensors():
     def gpu_fps():
 
         query = 'encoder.stats.averageFps'
-        data = NvidiaSensors.smiParser(query)
+        data = NvidiaSensors.smi_parser(query)
         data = int(data[0])
 
         return data
@@ -111,7 +111,7 @@ class NvidiaSensors():
     def gpu_clock():
 
         query = 'clocks.current.graphics'
-        data = NvidiaSensors.smiParser(query)
+        data = NvidiaSensors.smi_parser(query)
         data = int(data[0])
 
         return data

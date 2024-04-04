@@ -41,8 +41,8 @@ class LinuxCpuData():
 
         if self.core_count > 1:
 
-            temp_payload = self.buildPayload(psutil.sensors_temperatures()
-                                             ['coretemp'], index=0)
+            temp_payload = self.build_payload(psutil.sensors_temperatures()
+                                              ['coretemp'], index=0)
 
         else:
             core_temp = \
@@ -70,7 +70,7 @@ class LinuxCpuData():
     # get frequency per core
     def freq_per_core(self, all_cpu=True):
 
-        per_core_freq = self.buildPayload(psutil.cpu_freq(percpu=all_cpu))
+        per_core_freq = self.build_payload(psutil.cpu_freq(percpu=all_cpu))
 
         return per_core_freq
 
@@ -89,56 +89,6 @@ class LinuxCpuData():
         ram_use = round(ram_use, 2)
 
         return ram_use
-
-    # acquiring temperature sensor data for Rockchip 3588 devices
-    @staticmethod
-    def sys_temps():
-
-        soc_temp = psutil.sensors_temperatures()['soc_thermal'][0].current
-        big_core_0temp = psutil.sensors_temperatures()['bigcore0_thermal'][0].\
-            current
-        big_core_1temp = psutil.sensors_temperatures()['bigcore1_thermal'][0].\
-            current
-        little_core_temp = psutil.\
-            sensors_temperatures()['littlecore_thermal'][0].current
-        center_temp = \
-            psutil.sensors_temperatures()['center_thermal'][0].current
-        gpu_temp = psutil.sensors_temperatures()['gpu_thermal'][0].current
-        npu_temp = psutil.sensors_temperatures()['npu_thermal'][0].current
-        nvme_temp = psutil.sensors_temperatures()['nvme'][0].current
-
-        return soc_temp, big_core_0temp, big_core_1temp, little_core_temp, \
-            center_temp, gpu_temp, npu_temp, nvme_temp
-
-    # CPU frequencies for the various cores of a Rockchip 3588 device
-    @staticmethod
-    def get_rock_chip_3588_freqs():
-
-        freq = psutil.cpu_freq(percpu=True)
-        little_core = freq[0].current
-        big_core0 = freq[1].current
-        big_core1 = freq[2].current
-
-        return little_core, big_core0, big_core1
-
-    # get CPU temp for Raspberry Pi 4B
-    @staticmethod
-    def get_rpi_4b_temps():
-
-        rpi_cpu_temp = psutil.sensors_temperatures()['cpu_thermal'][0].current
-
-        return rpi_cpu_temp
-
-    @staticmethod
-    def rockchip_3566_temps():
-
-        return psutil.sensors_temperatures()['cpu_thermal'][0].current, \
-            psutil.sensors_temperatures()['gpu_thermal'][0].current
-
-    @staticmethod
-    def libre_lepotato_temps():
-
-        return psutil.sensors_temperatures()['scpi_sensors'][0].current
 
     @staticmethod
     def amd_linux_data():
