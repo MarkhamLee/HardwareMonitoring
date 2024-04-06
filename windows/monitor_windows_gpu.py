@@ -5,30 +5,25 @@
 # leverages psutil + the LibreHardwareMonitor library
 import json
 import gc
-import logging
 import os
 import sys
 import time
 from windows_data import WindowsSensors
 
-# this allows us to import modules, classes, scripts et al from the
-# "common" directory, which helps keep the code more modular while also
-# grouping scripts together by device type and/or purpose
+# this allows us to import commonly used modules, classes, scripts et al
+# from the "common" directory, so the code is more modular
 
 parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
 from common.device_tool import DeviceUtilities  # noqa: E402
 from common.nvidia_gpu import NvidiaSensors  # noqa: E402
-
-logging.basicConfig(filename='hardwareDataWindows.log', level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)s %(name)s %(threadName)s\
-                        : %(message)s')
+from common.logging_util import logger
 
 
 def monitor(client: object, cpu_data: object, gpu_data: object, TOPIC: str):
 
-    logging.debug('Windows HW monitoring started....')
+    logger.info('Windows HW monitoring started....')
 
     INTERVAL = int(os.environ['GAME_INTERVAL'])
 
@@ -40,6 +35,9 @@ def monitor(client: object, cpu_data: object, gpu_data: object, TOPIC: str):
         # get GPU data
         gpu_temp, gpu_utilization, vram_use, gpu_power, \
             gpu_clock = gpu_data.gpu_query()
+
+        # get FPS data
+        gpu_fps = gpu_data.gpu_fps()
 
         # get CPU load
         cpu_load = cpu_data.get_cpu_data()
@@ -57,18 +55,16 @@ def monitor(client: object, cpu_data: object, gpu_data: object, TOPIC: str):
             "ramUtilization": ram_use,
             "vramUtilization": vram_use,
             "gpuClock": gpu_clock,
-            "gpuPower": gpu_power
+            "gpuPower": gpu_power,
+            "fps": gpu_fps
         }
 
         payload = json.dumps(payload)
 
         result = client.publish(TOPIC, payload)
         status = result[0]
-        if status == 0:
-            print(f'Data {payload} was published to: {TOPIC} with status:\
-                  {status}')
-        else:
-            print(f'Failed to send {payload} to: {TOPIC}')
+        if status != 0:
+            logger.debug(f'Failed to send {payload} to: {TOPIC}')
 
         del payload, gpu_temp, cpu_temp, big_freq, little_freq, \
             gpu_utilization, cpu_load, ram_use, vram_use, \
