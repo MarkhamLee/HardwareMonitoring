@@ -4,6 +4,7 @@ Plan is to put together an overview of how to setup and configure Eclipse-Mosqui
 
 ![Dashboard Screenshot](/images/updated_screenshot.png) 
 
+
 **High level architecture comprised of temperature sensors attached to a Raspberry Pi, Eclipse-Mosquitto, Node-Red, InfluxDB and Grafana.**
 
-![Architecture](/images/monitoring_architecture.png)
+![Architecture](/images/monitoring_architecture_v2.png)
