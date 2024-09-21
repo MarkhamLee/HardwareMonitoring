@@ -2,7 +2,6 @@
 # Hardware Monitor for Linux & Windows:
 # https://github.com/MarkhamLee/HardwareMonitoring
 # For Linux devices with an NVIDIA GPU
-# CLI instructions <filename> <MQTT topic name as a string>
 import json
 import gc
 import logging
@@ -17,14 +16,13 @@ sys.path.append(parent_dir)
 
 from common.device_tool import DeviceUtilities  # noqa: E402
 from common.nvidia_gpu import NvidiaSensors  # noqa: E402
-
-logging.basicConfig(filename='hardwareDataLinuxGPU.log', level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)s %(name)s %(threadName)s\
-                        : %(message)s')
+from common.logging_util import logger  # noqa: E402
 
 
 def monitor(client: object, get_data: object,
             get_gpu_data: object, TOPIC: str, INTERVAL: int):
+
+    logger.info('Starting monitoring...')
 
     while True:
 
@@ -77,13 +75,9 @@ def main():
     # instantiate utilities class
     device_utilities = DeviceUtilities()
 
-    # parse command line arguments
-    args = sys.argv[1:]
-
-    TOPIC = args[0]
-    INTERVAL = args[1]
-
     # load environmental variables
+    TOPIC = int(os.environ['TOPIC'])
+    INTERVAL = os.environ['INTERVAL']
     MQTT_BROKER = os.environ["MQTT_BROKER"]
     MQTT_USER = os.environ['MQTT_USER']
     MQTT_SECRET = os.environ['MQTT_SECRET']

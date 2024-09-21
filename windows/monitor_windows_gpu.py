@@ -18,7 +18,7 @@ sys.path.append(parent_dir)
 
 from common.device_tool import DeviceUtilities  # noqa: E402
 from common.nvidia_gpu import NvidiaSensors  # noqa: E402
-from common.logging_util import logger
+from common.logging_util import logger  # noqa: E402
 
 
 def monitor(client: object, cpu_data: object, gpu_data: object, TOPIC: str):
