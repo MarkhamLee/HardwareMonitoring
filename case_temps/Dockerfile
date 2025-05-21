@@ -1,4 +1,4 @@
-FROM python:3.13-3 AS builder
+FROM python:3.13-slim AS builder
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.t
 
 
 # final stage
-FROM python:3.13-3
+FROM python:3.13-slim
 
 RUN apt-get update -y && apt-get install -y libgpiod2
 
