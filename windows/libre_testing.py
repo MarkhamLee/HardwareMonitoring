@@ -67,7 +67,8 @@ class GetWindowsSensorNames():
         for hw in self.handler.Hardware:
             for sensor in hw.Sensors:
                 name = str(sensor.Name)
+                type = str(sensor.SensorType)
                 value = round(float(sensor.Value), 1)
-                print(f'The value returned from sensor name: {name} is {value}')  # noqa: E501
+                print(f'The sensor type is: {type}, sensor name is: {name} and the returned value is: {value}')  # noqa: E501
 
         self.handler.Close()
