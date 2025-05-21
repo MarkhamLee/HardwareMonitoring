@@ -10,7 +10,7 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.t
 
 
 # final stage
-FROM python:3.13-3slim
+FROM python:3.13-3
 
 RUN apt-get update -y && apt-get install -y libgpiod2
 
