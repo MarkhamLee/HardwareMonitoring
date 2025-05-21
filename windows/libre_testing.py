@@ -9,14 +9,15 @@
 # acquire the sensor names to incorporate into your main script
 import clr
 import ctypes
-import logging
 import os
 import sys
 
-# create logger for logging errors, exceptions and the like
-logger = logging.basicConfig(filename='libre_testing.log', level=logging.DEBUG,
-                             format='%(asctime)s %(levelname)s\
-                             %(name)s %(threadName)s : %(message)s')
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_dir)
+
+from common.logging_util import log_file_logger  # noqa: E402
+
+logger = log_file_logger('Sensor_list')
 
 
 class GetWindowsSensorNames():
@@ -37,7 +38,7 @@ class GetWindowsSensorNames():
                 sys.exit(0)
 
             except Exception as e:
-                logger.info(f'sys.exit(0) failed with error: {e} trying os._exit(0) instead')  # noqa: E501
+                logger.debug(f'sys.exit(0) failed with error: {e} trying os._exit(0) instead')  # noqa: E501
                 os._exit(0)
 
         # load C# dllls
@@ -69,6 +70,6 @@ class GetWindowsSensorNames():
                 name = str(sensor.Name)
                 type = str(sensor.SensorType)
                 value = round(float(sensor.Value), 1)
-                print(f'The sensor type is: {type}, sensor name is: {name} and the returned value is: {value}')  # noqa: E501
+                logger.info(f'The sensor type is: {type}, sensor name is: {name} and the returned value is: {value}')  # noqa: E501
 
         self.handler.Close()
