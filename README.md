@@ -12,6 +12,12 @@ Also: I'm fully aware there are numerous off the shelf solutions for PC monitori
 
 ### Updates
 
+* **05/20/2025**
+    * Updated DLLs to ensure compatibility with the latest Hardware
+    * Tested/verified that Windows data monitoring works with Intel Ultra processors
+    * Updated Python dependencies
+    * Added more detailed instructions for setting up LibreHardwareMonitor, troubleshooting/gotchas that can occur with the DLLs. 
+
 * **04/03/24**
     * Added GitHub Actions config for building the Docker image for collecting PC case data with a Raspberry Pi 4B 
     * Extensive refactoring and code clean-up, normalizing variable names, streamling code where possible, etc.
