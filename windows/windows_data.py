@@ -1,12 +1,14 @@
-# Markham Lee 2023 - 2024
+# Markham Lee 2023 - 2025
 # Hardware Monitor for Windows & Linux
 # # https://github.com/MarkhamLee/HardwareMonitoring
 # This program makes use of the LibreHardWareMonitor repo:
 # https://github.com/LibreHardwareMonitor/LibreHardwareMonitor/tree/master
 # in particular two .dll hidsharp and LibreHardwareMonitorLib in order to
 # retrieve CPU data (temperature and clock frequency) Also: hat tip to
-# Matthew Houdebine's Turing Smart Screen repo for insights around how to
-# implement with Python All the GPU data comes from NVIDI SMI Queries, you
+# Matthew Houdebine's Turing Smart Screen repo:
+# https://github.com/mathoudebine/turing-smart-screen-python/tree/main
+# for insights around how to implement Libre Hardware Monitor within
+# Python. All the GPU data comes from NVIDI SMI Queries, you
 # can read more here:
 # https://nvidia.custhelp.com/app/answers/detail/a_id/3751/~/useful-nvidia-smi-queries
 import clr
@@ -15,6 +17,13 @@ import os
 import psutil
 import sys
 from statistics import mean
+
+parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(parent_dir)
+
+from common.logging_util import console_logging  # noqa: E402
+
+logger = console_logging('windows_data_logging')
 
 
 class WindowsSensors():
@@ -28,13 +37,14 @@ class WindowsSensors():
 
         # verify that the app is running with Admin permission
         if ctypes.windll.shell32.IsUserAnAdmin() == 0:
-            print("Error: attempted to run script without admin rights,\
-                  please re-open your IDE or shell with admin rights\
-                  and ty again")
+            logger.debug("Error: attempted to run script without admin rights,\
+                         please re-open your IDE or shell with admin rights\
+                         and ty again")
             try:
                 sys.exit(0)
 
             except Exception as e:
+                logger.debug(f'Shutdown command sys.exit(0) failed with error: {e}, trying os.exit(0)')  # noqa: E501
                 os._exit(0)
 
         # load C# dllls
@@ -71,7 +81,7 @@ class WindowsSensors():
                 # Average CPU core temperature
                 if sensor.SensorType == self.Hardware.SensorType.\
                     Temperature and str(sensor.Name).\
-                        startswith("Core Average"):
+                        startswith("CPU Core"):
                     cpu_temp = round(float(sensor.Value), 1)
                 if sensor.SensorType == self.Hardware.\
                     SensorType.Clock and str(sensor.Name).\

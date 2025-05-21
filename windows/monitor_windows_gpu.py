@@ -1,10 +1,9 @@
-# Markham Lee (C) 2023 - 2024
+# Markham Lee (C) 2023 - 2025
 # Hardware Monitor for Linux & Windows:
 # https://github.com/MarkhamLee/HardwareMonitoring
 # script to retrieve Windows data and publish it to an MQTT topic
 # leverages psutil + the LibreHardwareMonitor library
 import json
-import gc
 import os
 import sys
 import time
@@ -18,7 +17,9 @@ sys.path.append(parent_dir)
 
 from common.device_tool import DeviceUtilities  # noqa: E402
 from common.nvidia_gpu import NvidiaSensors  # noqa: E402
-from common.logging_util import logger  # noqa: E402
+from common.logging_util import console_logging  # noqa: E402
+
+logger = console_logging('monitoring_windows_gpu')
 
 
 def monitor(client: object, cpu_data: object, gpu_data: object, TOPIC: str):
@@ -37,6 +38,7 @@ def monitor(client: object, cpu_data: object, gpu_data: object, TOPIC: str):
             gpu_clock = gpu_data.gpu_query()
 
         # get FPS data
+        # Doesn't really work, will find another source for this data
         gpu_fps = gpu_data.gpu_fps()
 
         # get CPU load
@@ -45,6 +47,10 @@ def monitor(client: object, cpu_data: object, gpu_data: object, TOPIC: str):
         # get RAM use
         ram_use = cpu_data.get_ram()
 
+        # get NVME temp
+        # nvme1, nvme2, nvme3 = cpu_data.get_nvme_temps()
+
+        # Adjust the # of NVME temps to fit your machine
         payload = {
             "gpuTemp": gpu_temp,
             "cpuTemp": cpu_temp,
@@ -60,17 +66,13 @@ def monitor(client: object, cpu_data: object, gpu_data: object, TOPIC: str):
         }
 
         payload = json.dumps(payload)
+        logger.info(payload)
 
         result = client.publish(TOPIC, payload)
         status = result[0]
         if status != 0:
             logger.debug(f'Failed to send {payload} to: {TOPIC}')
 
-        del payload, gpu_temp, cpu_temp, big_freq, little_freq, \
-            gpu_utilization, cpu_load, ram_use, vram_use, \
-            gpu_clock, gpu_power
-
-        gc.collect()
         time.sleep(INTERVAL)
 
 
