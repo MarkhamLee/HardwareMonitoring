@@ -42,7 +42,7 @@ class DeviceUtilities():
         def connection_status(client, userdata, flags, code):
 
             if code == 0:
-                print('connected')
+                logger.info(f'Connected to MQTT broker at {host} with client ID: {clientID}')  # noqa: E501
 
             else:
                 print(f'connection error: {code} retrying...')
