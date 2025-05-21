@@ -4,7 +4,7 @@ WORKDIR /app
 
 RUN apt-get update -y && apt-get install -y gcc python3-dev libgpiod2
 
-COPY requirements.txt .
+COPY case_temps/requirements.txt .
 
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.txt
 
@@ -21,8 +21,8 @@ RUN pip install --no-cache /wheels/*
 
 COPY ./common ./common
 
-WORKDIR /case_monitor
+WORKDIR /case_temps
 
 COPY ./case_temps ./
 
-ENTRYPOINT ["python3", "/case_monitor/main.py"] 
+ENTRYPOINT ["python3", "/case_temps/main.py"] 
