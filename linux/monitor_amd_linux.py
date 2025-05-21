@@ -6,9 +6,7 @@
 # CLI instructions file_name + <MQTT topic name as a string>
 # + <Integer for sleep interval>
 # e.g., python3 monitor_amd_linux.py '/home/amd' 5
-import gc
 import json
-import logging
 import os
 import sys
 from time import sleep
@@ -19,11 +17,9 @@ parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
 from common.device_tool import DeviceUtilities  # noqa: E402
+from common.logging_util import console_logging  # noqa: E402
 
-# create logger for logging errors, exceptions and the like
-logging.basicConfig(filename='hardwareDataLinuxCPU.log', level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)s %(name)s %(threadName)s\
-                        : %(message)s')
+logger = console_logging('amd_linux_monitoring')
 
 
 def monitor(client: object, get_data: object, TOPIC: str, INTERVAL: int):
@@ -52,17 +48,14 @@ def monitor(client: object, get_data: object, TOPIC: str, INTERVAL: int):
         }
 
         payload = json.dumps(payload)
+        logger.info(payload)
 
         result = client.publish(TOPIC, payload)
         status = result[0]
 
         if status != 0:
             print(f'Failed to send {payload} to: {TOPIC}')
-            logging.debug(f'MQTT publishing failure, return code: {status}')
-
-        del payload, cpu_temp, amdgpu_temp, nvme_temp, cpu_freq, \
-            cpu_util, ram_util, status, result
-        gc.collect()
+            logger.debug(f'MQTT publishing failure, return code: {status}')
 
         sleep(INTERVAL)
 
@@ -94,6 +87,8 @@ def main():
 
     # instantiate CPU & GPU data classes
     get_data = LinuxCpuData()
+
+    logger.info('Starting HW monitoring')
 
     # start data monitoring
     try:

@@ -3,8 +3,6 @@
 # https://github.com/MarkhamLee/HardwareMonitoring
 # For Linux devices with an NVIDIA GPU
 import json
-import gc
-import logging
 import os
 import sys
 from time import sleep
@@ -16,7 +14,9 @@ sys.path.append(parent_dir)
 
 from common.device_tool import DeviceUtilities  # noqa: E402
 from common.nvidia_gpu import NvidiaSensors  # noqa: E402
-from common.logging_util import logger  # noqa: E402
+from common.logging_util import console_logging  # noqa: E402
+
+logger = console_logging('linux_gpu_monitoring')
 
 
 def monitor(client: object, get_data: object,
@@ -56,17 +56,15 @@ def monitor(client: object, get_data: object,
         }
 
         payload = json.dumps(payload)
+        logger.info(payload)
 
         result = client.publish(TOPIC, payload)
         status = result[0]
         if status != 0:
 
             print(f'Failed to send {payload} to: {TOPIC}')
-            logging.debug(f'MQTT publishing failure, return code: {status}')
+            logger.debug(f'MQTT publishing failure, return code: {status}')
 
-        del payload, cpu_util, ram_use, cpu_freq, cpu_temp, status, \
-            result, gpu_load, gpu_vram, gpu_power, gpu_clock
-        gc.collect()
         sleep(INTERVAL)
 
 

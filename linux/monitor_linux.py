@@ -4,9 +4,7 @@
 # https://github.com/MarkhamLee/HardwareMonitoring
 # This is for Linux devices that don't have an NVIDIA GPU, E.g., an Intel NUC
 # CLI instructions monitor_linux.py <MQTT topic name as a string>
-import gc
 import json
-import logging
 import os
 import sys
 from time import sleep
@@ -17,11 +15,9 @@ parent_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(parent_dir)
 
 from common.device_tool import DeviceUtilities  # noqa: E402
+from common.logging_util import console_logging  # noqa: E402
 
-# create logger for logging errors, exceptions and the like
-logging.basicConfig(filename='hardwareDataLinuxCPU.log', level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)s %(name)s %(threadName)s\
-                        : %(message)s')
+logger = console_logging('linux_monitoring_intel')
 
 
 def monitor(client: object, get_data: object, TOPIC: str, INTERVAL: int):
@@ -47,6 +43,7 @@ def monitor(client: object, get_data: object, TOPIC: str, INTERVAL: int):
             "ramUse": ram_use
         }
 
+        logger.info(payload)
         payload = json.dumps(payload)
 
         result = client.publish(TOPIC, payload)
@@ -54,10 +51,8 @@ def monitor(client: object, get_data: object, TOPIC: str, INTERVAL: int):
 
         if status != 0:
             print(f'Failed to send {payload} to: {TOPIC}')
-            logging.debug(f'MQTT publishing failure, return code: {status}')
+            logger.debug(f'MQTT publishing failure, return code: {status}')
 
-        del payload, cpu_util, ram_use, cpu_freq, cpu_temp, status, result
-        gc.collect()
         sleep(INTERVAL)
 
 
@@ -87,6 +82,7 @@ def main():
     get_data = LinuxCpuData()
 
     # start data monitoring
+    logger.info('Starting HW monitoring')
     try:
         monitor(client, get_data, TOPIC, INTERVAL)
 
