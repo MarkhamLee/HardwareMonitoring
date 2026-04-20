@@ -29,7 +29,7 @@ DHT dht_sensorc(DHT_SENSOR_PIN_21, DHT_SENSOR_TYPE);
 
 PicoMQTT::Client mqtt("");
 
-String topic = "/hardware/ml_workstation_case_temps";
+String topic = "/hardware/gaming_pc_case_temps";
 
 void setup() {
   
