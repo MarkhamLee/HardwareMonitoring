@@ -31,6 +31,7 @@ PicoMQTT::Client mqtt("");
 
 String topic = "/hardware/gaming_pc_case_temps";
 
+
 void setup() {
   
 
@@ -124,9 +125,9 @@ void setup() {
 
     // set up for DHT22 sensor 
     Serial.begin(9600);
-    dht_sensor.begin();  // initialize sensor
-    dht_sensorb.begin(); //initialize sensor
-    dht_sensorc.begin(); //initialize sensor
+    dht_sensor.begin();  // initialize sensor for interior measurements
+    dht_sensorb.begin(); //initialize sensor for intake measurements
+    dht_sensorc.begin(); //initialize sensor for exhaust measurements
 
 
 }
@@ -136,25 +137,25 @@ void loop() {
 
   mqtt.loop();
 
-  // sensor 0
+  // sensor 0 - interior
+  
   // read humidity
   digitalWrite(LED,HIGH); 
   float humi  = dht_sensor.readHumidity();
   // read temperature in Celsius
   float tempC = dht_sensor.readTemperature();
  
-
-  // sensor 1
+  // sensor 1 - intake
+  
   // read humidity
- 
   float humi_1  = dht_sensorb.readHumidity();
   // read temperature in Celsius
   float tempC_1 = dht_sensorb.readTemperature();
 
 
-  // sensor 2
+  // sensor 2 - exhaust
+
   // read humidity
-  
   float humi_2  = dht_sensorc.readHumidity();
   // read temperature in Celsius
   float tempC_2 = dht_sensorc.readTemperature();
@@ -170,7 +171,8 @@ void loop() {
 
   } else {
 
-    double hf = tempC_2 - tempC;
+    // calculate heating via subtracting exhaust from intake
+    double hf = tempC_2 - tempC_1;
 
     // build JSON message for MQTT 
     JsonDocument payload; // define json document
